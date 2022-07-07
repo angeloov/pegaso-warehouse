@@ -1,0 +1,43 @@
+@font-face {
+  font-family: Graphik;
+  src: url(GraphikThin.otf);
+	font-weight: 100;
+}
+
+@font-face {
+  font-family: Graphik;
+  src: url(GraphikLight.otf);
+	font-weight: 300;
+}
+
+@font-face {
+  font-family: Graphik;
+  src: url(GraphikRegular.otf);
+	font-weight: 400;
+}
+
+@font-face {
+  font-family: Graphik;
+  src: url(GraphikMedium.otf);
+	font-weight: 500;
+}
+@font-face {
+  font-family: Graphik;
+  src: url(GraphikSemibold.otf);
+	font-weight: 600;
+}
+@font-face {
+  font-family: Graphik;
+  src: url(GraphikBold.otf);
+	font-weight: 700;
+}
+@font-face {
+  font-family: Graphik;
+  src: url(GraphikBlack.otf);
+	font-weight: 800;
+}
+@font-face {
+  font-family: Graphik;
+  src: url(GraphikSuper.otf);
+	font-weight: 900;
+}
