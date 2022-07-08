@@ -1,26 +1,21 @@
 <script setup lang="ts">
-import logo from "../assets/logo.svg";
 import LoginBox from "@/components/LoginBox.vue";
+import Header from "@/components/Header.vue";
 </script>
 
 <template>
   <div class="index-page">
-    <header>
-      <img :src="logo" alt="logo" class="pegasow-logo" />
-    </header>
+    <Header />
 
     <main>
-      <LoginBox />
+      <Suspense>
+        <LoginBox />
+      </Suspense>
     </main>
   </div>
 </template>
 
 <style scoped>
-.pegasow-logo {
-  width: 220px;
-  margin: 2rem 3rem;
-}
-
 .index-page {
   height: 100vh;
   background-image: url(../assets/index-background.jpg);

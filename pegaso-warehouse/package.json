@@ -2,7 +2,7 @@
   "name": "pegaso-warehouse",
   "version": "0.0.0",
   "scripts": {
-    "dev": "vite",
+    "dev": "vite --host",
     "build": "run-p type-check build-only",
     "preview": "vite preview --port 4173",
     "test:unit": "vitest --environment jsdom",
@@ -10,6 +10,7 @@
     "type-check": "vue-tsc --noEmit -p tsconfig.vitest.json --composite false"
   },
   "dependencies": {
+    "@trpc/client": "^9.25.3",
     "pinia": "^2.0.14",
     "primeflex": "^3.2.1",
     "primeicons": "^5.0.0",

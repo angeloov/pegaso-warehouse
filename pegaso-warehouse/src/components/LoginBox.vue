@@ -4,11 +4,47 @@
 // }>();
 
 import { reactive } from "vue";
+import { createTRPCClient } from "@trpc/client";
+import type { AppRouter } from "../../../backend/src/index";
+
+import router from "../router/index";
+
+import { useUserDataStore } from "@/stores/userData";
 
 const state = reactive({ username: "", password: "" });
+const userData = useUserDataStore();
 
-const onSubmit = () => {
-  console.log(state);
+const client = createTRPCClient<AppRouter>({
+  url: "http://localhost:4000/trpc",
+  headers: () => {
+    return {
+      Authorization: userData.accessToken,
+    };
+  },
+});
+
+const onFormSubmit = async () => {
+  const res = await fetch("http://localhost:4000/login", {
+    method: "POST",
+    credentials: "include",
+    headers: {
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify({ username: state.username, password: state.password }),
+  });
+
+  const data = await res.json();
+
+  if (data.success) {
+    userData.accessToken = data.accessToken;
+
+    const bilbo = client.query("getMyInfo").then(r => {
+      console.log(r);
+      router.push("/home");
+    });
+  } else {
+    console.log(data);
+  }
 };
 </script>
 
@@ -16,7 +52,7 @@ const onSubmit = () => {
   <div class="login-box">
     <h1 class="main-title">Login</h1>
 
-    <form @submit.prevent="onSubmit()">
+    <form @submit.prevent="onFormSubmit">
       <span class="p-float-label">
         <InputText id="username" type="text" v-model="state.username" />
         <label for="username">Username</label>
@@ -27,7 +63,7 @@ const onSubmit = () => {
         <label for="password">Password</label>
       </span>
 
-      <Button type="submit" label="Submit" /> 
+      <Button type="submit" label="Submit" />
     </form>
 
     <p>{{ state.username }}</p>

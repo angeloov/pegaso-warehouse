@@ -3,43 +3,44 @@ import * as trpcExpress from "@trpc/server/adapters/express";
 import express from "express";
 import User from "./mongoose/User";
 import mongoose from "mongoose";
-import utils from "./jwt/utils";
-import path from "path";
+import jwt from "jsonwebtoken";
+import * as utils from "./jwt/utils";
+import cors from "cors";
+
 // TODO: Fix this
+import path from "path";
 require("dotenv").config({ path: path.resolve(__dirname, "../.env") });
 
-const url =
-  "mongodb+srv://bigpappa:bigpappa@mycluster.wzkabhg.mongodb.net/?retryWrites=true&w=majority";
+const url = process.env.MONGODB_URI;
 mongoose.connect(url);
 
 const app = express();
+app.use(cors({
+  origin: "http://localhost:3000",
+  credentials: true,
+}))
+
 
 // tRPC config
 import appRouter from "./tRPC";
 
 // created for each request
-const createContext = ({ req, res }: trpcExpress.CreateExpressContextOptions) => ({}); // no context
-type Context = trpc.inferAsyncReturnType<typeof createContext>;
+const createContext = ({ req, res }: trpcExpress.CreateExpressContextOptions) => {
+  if (req.headers.authorization) {
+    return {
+      jwt: req.headers.authorization.split(" ")[1],
+    };
+  } else {
+    return { jwt: null };
+  }
+};
+export type Context = trpc.inferAsyncReturnType<typeof createContext>;
 
 app.use(
   "/trpc",
   trpcExpress.createExpressMiddleware({
     router: appRouter,
     createContext,
-  })
-);
-
-import session from "express-session";
-import MongoStore from "connect-mongo";
-
-app.use(
-  session({
-    secret: "foo",
-    store: MongoStore.create({
-      mongoUrl: url,
-    }),
-    saveUninitialized: false,
-    resave: true,
   })
 );
 
@@ -56,6 +57,8 @@ app.post("/login", express.urlencoded({ extended: false }), async (req, res, nex
       username: req.body.username,
     }).exec();
 
+    console.log(req.body);
+
     if (!user) {
       return res.status(401).json({ success: false, message: "Your username is incorrect" });
     }
@@ -64,16 +67,9 @@ app.post("/login", express.urlencoded({ extended: false }), async (req, res, nex
 
     if (passwordIsCorrect) {
       const JWT_OBJ = utils.createAccessToken(user);
-      // const refreshToken = await utils.createOrRetrieveRefreshToken(user, next);
-
-      // res.cookie("refreshToken", refreshToken, {
-      //   maxAge: 60 * 60 * 24 * 7 * 1000, // 7 days in ms
-      //   httpOnly: true,
-      // });
 
       res.status(200).json({
         accessToken: JWT_OBJ.token,
-        // expiresIn: JWT_OBJ.expires,
         success: true,
       });
     } else {
@@ -83,13 +79,6 @@ app.post("/login", express.urlencoded({ extended: false }), async (req, res, nex
     return next(err);
   }
 });
-
-app.post("/getinfo", (req, res) => {
-  console.log(req.session.username);
-  res.json({ stored: req.session.username });
-});
-
-import jwt from "jsonwebtoken";
 
 app.post("/protected", passport.authenticate("jwt", { session: false }), async (req, res, next) => {
   let userToken = req.headers["authorization"]?.split(" ")[1];
@@ -106,32 +95,10 @@ app.post("/protected", passport.authenticate("jwt", { session: false }), async (
 });
 
 app.post("/register", async (req, res) => {
-  console.log(req.body);
-
   const userDoc = new User({ username: "angelo", password: "ciao", firstname: "Angelo" });
   await userDoc.save();
 
   res.end();
-  // res.json({ stored: req.session.user });
-});
-
-app.get("/logout", function (req, res, next) {
-  // logout logic
-
-  // clear the user from the session object and save.
-  // this will ensure that re-using the old session id
-  // does not have a logged in user
-  req.session.user = null;
-  req.session.save(function (err) {
-    if (err) next(err);
-
-    // regenerate the session, which is good practice to help
-    // guard against forms of session fixation
-    req.session.regenerate(function (err) {
-      if (err) next(err);
-      res.redirect("/");
-    });
-  });
 });
 
 app.use((err: any, req: any, res: any, next: any) => {
