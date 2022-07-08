@@ -4,7 +4,7 @@
   "description": "Backend with tRPC and Express.js for Pegaso Warehouse",
   "main": "index.js",
   "scripts": {
-    "dev": "npx nodemon dist/index.js",
+    "dev": "npx nodemon dist/index.js --watch ./src -e ts",
     "watch": "npx tsc -w",
     "test": "echo \"Error: no test specified\" && exit 1"
   },

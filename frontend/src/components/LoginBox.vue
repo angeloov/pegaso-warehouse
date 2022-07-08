@@ -1,27 +1,12 @@
 <script setup lang="ts">
-// defineProps<{
-//   msg: string;
-// }>();
-
 import { reactive } from "vue";
-import { createTRPCClient } from "@trpc/client";
-import type { AppRouter } from "../../../backend/src/index";
-
+import client from "@/utils/trpc";
 import router from "../router/index";
 
 import { useUserDataStore } from "@/stores/userData";
 
 const state = reactive({ username: "", password: "" });
 const userData = useUserDataStore();
-
-const client = createTRPCClient<AppRouter>({
-  url: "http://localhost:4000/trpc",
-  headers: () => {
-    return {
-      Authorization: userData.accessToken,
-    };
-  },
-});
 
 const onFormSubmit = async () => {
   const res = await fetch("http://localhost:4000/login", {
@@ -38,10 +23,12 @@ const onFormSubmit = async () => {
   if (data.success) {
     userData.accessToken = data.accessToken;
 
-    const bilbo = client.query("getMyInfo").then(r => {
-      console.log(r);
-      router.push("/home");
-    });
+    const userInfo = await client.query("getMyInfo");
+    userData.username = userInfo.username;
+    userData.firstname = userInfo.firstname;
+    userData.id = userInfo._id;
+
+    router.push("/home");
   } else {
     console.log(data);
   }

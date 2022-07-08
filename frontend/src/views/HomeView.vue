@@ -1,10 +1,16 @@
 <script setup lang="ts">
 import Header from "@/components/Header.vue";
-import addComponentIcon from "@/assets/icons/component-add.svg";
-import addItemIcon from "@/assets/icons/box-add.svg";
+import addComponentIcon from "@/assets/icons/add-component.svg";
+import addItemIcon from "@/assets/icons/add-item.svg";
 import ViewTag from "../components/ViewTag.vue";
 
-console.log(addComponentIcon);
+import { useUserDataStore } from "@/stores/userData";
+const userData = useUserDataStore();
+
+const getRandomEmoji = () => {
+  const emojis = ["👋", "😀", "🥳", "🎉"];
+  return emojis[Math.floor(Math.random() * emojis.length)];
+};
 </script>
 
 <template>
@@ -12,14 +18,16 @@ console.log(addComponentIcon);
     <Header />
 
     <main>
+      <h1 class="welcome-title">Ciao, {{ userData.firstname }} {{ getRandomEmoji() }}</h1>
+
       <div class="button-container">
         <Button type="button" class="primary-btn">
-          <img alt="logo" :src="addComponentIcon" />
+          <img alt="logo" :src="addComponentIcon" class="primary-btn-icon" />
           <span class="ml-3 font-bold text-xl">Aggiungi componente</span>
         </Button>
 
         <Button type="button" class="primary-btn">
-          <img alt="logo" :src="addItemIcon" />
+          <img alt="logo" :src="addItemIcon" class="primary-btn-icon" />
           <span class="ml-3 font-bold text-xl">Aggiungi oggetto</span>
         </Button>
       </div>
@@ -40,6 +48,15 @@ console.log(addComponentIcon);
 <style scoped>
 main {
   margin: 0 3rem;
+  margin-top: 1rem;
+}
+
+.primary-btn-icon {
+  width: 32px;
+}
+
+.welcome-title {
+  font-weight: 600;
 }
 .primary-btn {
   border-radius: 1.25rem;
@@ -51,9 +68,8 @@ main {
 .button-container {
   display: flex;
   gap: 1rem;
-}
-.objects-container {
-  margin-top: 4rem;
+  margin-top: 1rem;
+  margin-bottom: 4rem;
 }
 
 .objects-container > span {

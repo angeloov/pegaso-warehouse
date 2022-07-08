@@ -7,19 +7,21 @@ import jwt from "jsonwebtoken";
 import * as utils from "./jwt/utils";
 import cors from "cors";
 
+import type { UserType } from "./mongoose/User";
+
 // TODO: Fix this
 import path from "path";
 require("dotenv").config({ path: path.resolve(__dirname, "../.env") });
 
-const url = process.env.MONGODB_URI;
-mongoose.connect(url);
+mongoose.connect(process.env.MONGODB_URI as string);
 
 const app = express();
-app.use(cors({
-  origin: "http://localhost:3000",
-  credentials: true,
-}))
-
+app.use(
+  cors({
+    origin: "http://localhost:3000",
+    credentials: true,
+  })
+);
 
 // tRPC config
 import appRouter from "./tRPC";
@@ -84,8 +86,7 @@ app.post("/protected", passport.authenticate("jwt", { session: false }), async (
   let userToken = req.headers["authorization"]?.split(" ")[1];
 
   if (userToken) {
-    let userData = jwt.verify(userToken, process.env.ACCESS_TOKEN_SECRET);
-    console.log("/protected route request -> id:", userData.id);
+    const userData = jwt.verify(userToken, process.env.ACCESS_TOKEN_SECRET as string) as UserType;
     console.log(await User.findById(userData.id));
   } else {
     res.status(503).json({ message: "No JWT in request" });
