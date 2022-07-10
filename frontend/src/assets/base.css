@@ -2,6 +2,9 @@
 @import "../assets/fonts/graphik/graphik.css";
 
 :root {
+  --light-gray: #727272;
+  --primary-color: #3B82F6;
+
   --vt-c-white: #ffffff;
   --vt-c-white-soft: #f8f8f8;
   --vt-c-white-mute: #f2f2f2;
