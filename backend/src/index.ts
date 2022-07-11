@@ -15,29 +15,6 @@ require("dotenv").config({ path: path.resolve(__dirname, "../.env") });
 
 mongoose.connect(process.env.MONGODB_URI as string);
 
-// import itemModel from "./mongoose/Item";
-// const a = new itemModel({
-//   _id: "AA000",
-//   name: "Item 1",
-//   quantity: 12,
-//   position: "Pegaso",
-//   tags: ["Portatile"],
-//   project_name: "Alternanza",
-//   history: [
-//     {
-//       user_id: 1,
-//       date: new Date(Date.now()),
-//       modifications: {
-//         name: ["L57B", "L47C"],
-//         position: ["Pegaso", "TUV"],
-//       },
-//     },
-//   ],
-//   website: "mouser",
-//   part_number: "012",
-// });
-// a.save();
-
 const app = express();
 app.use(
   cors({
