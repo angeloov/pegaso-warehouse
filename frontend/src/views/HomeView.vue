@@ -1,8 +1,11 @@
 <script setup lang="ts">
 import Header from "@/components/Header.vue";
-import addComponentIcon from "@/assets/icons/add-component.svg";
+import addComponentIcon from "@/assets/icons/add-item.svg";
 import addItemIcon from "@/assets/icons/add-item.svg";
 import ViewTag from "../components/ViewTag.vue";
+
+import client from "@/utils/trpc";
+import router from "@/router";
 
 import { useUserDataStore } from "@/stores/userData";
 const userData = useUserDataStore();
@@ -18,16 +21,13 @@ const getRandomEmoji = () => {
     <Header />
 
     <main>
-      <h1 class="welcome-title">Ciao, {{ userData.firstname }} {{ getRandomEmoji() }}</h1>
+      <h1 class="welcome-title">
+        Ciao, {{ userData.firstName }} {{ getRandomEmoji() }}
+      </h1>
 
       <div class="button-container">
-        <Button type="button" class="primary-btn">
+        <Button @click="() => router.push('/add')" type="button" class="primary-btn">
           <img alt="logo" :src="addComponentIcon" class="primary-btn-icon" />
-          <span class="ml-3 font-bold text-xl">Aggiungi componente</span>
-        </Button>
-
-        <Button type="button" class="primary-btn">
-          <img alt="logo" :src="addItemIcon" class="primary-btn-icon" />
           <span class="ml-3 font-bold text-xl">Aggiungi oggetto</span>
         </Button>
       </div>
@@ -78,7 +78,7 @@ main {
   gap: 0.5rem;
 }
 .objects-container h2 {
-  font-weight: 700;
+  font-weight: 600;
   margin-bottom: 1rem;
 }
 

@@ -2,7 +2,6 @@
 import logo from "@/assets/logo.svg";
 import { RouterLink } from "vue-router";
 import { useRoute } from "vue-router";
-import { log } from "console";
 </script>
 
 <template>
@@ -43,13 +42,20 @@ header {
     width: 180px;
     margin: 2rem auto;
   }
+
+  .link-container {
+    display: none !important;
+    background: blueviolet;
+  }
 }
 
 .header-link:hover {
   color: var(--primary-color);
   font-weight: 500;
 }
+
 .header-link {
+  box-sizing: border-box;
   text-decoration: none;
   font-size: 1rem;
   color: var(--light-gray);

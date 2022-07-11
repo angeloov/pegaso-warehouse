@@ -3,7 +3,9 @@
 
 :root {
   --light-gray: #727272;
-  --primary-color: #3B82F6;
+  --primevue-gray: #495057;
+
+  --primary-color: #3b82f6;
 
   --vt-c-white: #ffffff;
   --vt-c-white-soft: #f8f8f8;
@@ -74,4 +76,8 @@ body {
   text-rendering: optimizeLegibility;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
+}
+
+h1, h2 {
+  letter-spacing: -0.03em;
 }

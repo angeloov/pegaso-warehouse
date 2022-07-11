@@ -1,7 +1,11 @@
 import { createRouter, createWebHistory } from "vue-router";
 import IndexView from "../views/IndexView.vue";
+import HomeView from "@/views/HomeView.vue";
 import SearchView from "@/views/SearchView.vue";
 import QRCodesView from "@/views/QRCodesView.vue";
+import AddItemView from "@/views/AddItemView.vue";
+
+import fetchUserData from "@/utils/fetchUserData";
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
@@ -14,10 +18,8 @@ const router = createRouter({
     {
       path: "/home",
       name: "home",
-      // route level code-splitting
-      // this generates a separate chunk (About.[hash].js) for this route
-      // which is lazy-loaded when the route is visited.
-      component: () => import("../views/HomeView.vue"),
+      component: HomeView,
+      beforeEnter: fetchUserData,
     },
     {
       path: "/search",
@@ -28,6 +30,11 @@ const router = createRouter({
       path: "/qrcodes",
       name: "qrcodes",
       component: QRCodesView,
+    },
+    {
+      path: "/add",
+      name: "add",
+      component: AddItemView,
     },
   ],
 });

@@ -4,7 +4,7 @@ export const useUserDataStore = defineStore({
   id: "userData",
   state: () => ({
     id: "",
-    firstname: "",
+    firstName: "",
     username: "",
     accessToken: "",
   }),

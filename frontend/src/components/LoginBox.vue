@@ -21,12 +21,17 @@ const onFormSubmit = async () => {
   const data = await res.json();
 
   if (data.success) {
-    userData.accessToken = data.accessToken;
+    localStorage.setItem("accessToken", data.accessToken);
 
     const userInfo = await client.query("getMyInfo");
-    userData.username = userInfo.username;
-    userData.firstname = userInfo.firstname;
-    userData.id = userInfo._id;
+    console.log(userInfo);
+    if (userInfo) {
+      userData.username = userInfo.username;
+      userData.firstName = userInfo.firstname;
+      userData.id = userInfo._id;
+    } else {
+      throw new Error("Error in login");
+    }
 
     router.push("/home");
   } else {
@@ -52,9 +57,6 @@ const onFormSubmit = async () => {
 
       <Button type="submit" label="Submit" />
     </form>
-
-    <p>{{ state.username }}</p>
-    <p>{{ state.password }}</p>
   </div>
 </template>
 
