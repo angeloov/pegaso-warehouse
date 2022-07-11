@@ -6,29 +6,20 @@ function increment(char: string) {
   }
 }
 
-let i = 1;
-export default function computeNextId(s: any): string {
-  if (s == "ZZ999") new Error("String reached its limit");
+export default function computeNextId(s: string): string {
+  let newS = s.split("");
 
-  const last = s[s.length - i];
-
-  if (last == "9" || last == "Z") {
-    s = s.split("");
-
-    if (last.match(/[0-9]/)) 
-      s[s.length - i] = "0";
-    else 
-      s[s.length - i] = "A";
-    
-    s = s.join("");
-
-    i++;
-    return computeNextId(s);
-  } else {
-    let newS = s.split("");
-    newS[s.length - i] = increment(newS[s.length - i]);
-    newS = newS.join("");
-
-    return newS;
+  for (let i = s.length - 1; i >= 0; i--) {
+    let last = newS[i];
+    if (last == "9") {
+      newS[i] = "0";
+    } else if (last == "Z") {
+      newS[i] = "A";
+    } else {
+      newS[i] = increment(newS[i]);
+      return newS.join("");
+    }
   }
+
+  throw new Error("String reached its limit (ZZ999)");
 }

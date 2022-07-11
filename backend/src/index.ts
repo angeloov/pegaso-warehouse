@@ -1,3 +1,5 @@
+import computeNextId from "./utils/computeNextId";
+
 import * as trpc from "@trpc/server";
 import * as trpcExpress from "@trpc/server/adapters/express";
 import express from "express";
