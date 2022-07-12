@@ -52,6 +52,23 @@ const appRouter = trpc
         part_number: input.partNumber,
       });
     },
+  })
+  .query("search", {
+    input: z.object({
+      itemName: z.string(),
+      projectName: z.string(),
+      position: z.string(),
+      // tags: z.string().array(),
+    }),
+    async resolve({ input, ctx }) {
+      const query = await itemModel.find({
+        name: { $regex: ".*" + input.itemName + ".*" },
+        project_name: { $regex: ".*" + input.projectName + ".*" },
+        position: { $regex: ".*" + input.position + ".*" },
+      });
+
+      return query;
+    },
   });
 
 export default appRouter;

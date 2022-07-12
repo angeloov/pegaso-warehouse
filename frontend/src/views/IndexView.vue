@@ -8,9 +8,7 @@ import Header from "@/components/Header.vue";
     <Header />
 
     <main>
-      <Suspense>
-        <LoginBox />
-      </Suspense>
+      <LoginBox />
     </main>
   </div>
 </template>
