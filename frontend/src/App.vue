@@ -5,7 +5,9 @@ import client from "@/utils/trpc";
 
 <template>
   <div>
-    <RouterView />
+    <Suspense>
+      <RouterView />
+    </Suspense>
   </div>
 </template>
 

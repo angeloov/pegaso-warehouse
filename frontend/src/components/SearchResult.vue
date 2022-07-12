@@ -1,9 +1,9 @@
 <script setup lang="ts">
+import itemIcon from "@/assets/icons/item.svg";
+
 defineProps<{
   itemName: string;
 }>();
-
-import itemIcon from "@/assets/icons/item.svg";
 </script>
 
 <template>

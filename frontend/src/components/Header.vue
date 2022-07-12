@@ -9,16 +9,22 @@ import { useRoute } from "vue-router";
     <img :src="logo" alt="logo" class="pegasow-logo select-none" />
 
     <span class="link-container">
-      <RouterLink class="header-link" :class="{ 'is-blue': useRoute().name === 'home' }" to="/home"
+      <RouterLink
+        title="Home"
+        class="header-link"
+        :class="{ 'is-blue': useRoute().name === 'home' }"
+        to="/home"
         >Home</RouterLink
       >
       <RouterLink
+        title="Search"
         class="header-link"
         :class="{ 'is-blue': useRoute().name === 'search' }"
         to="/search"
         >Search</RouterLink
       >
       <RouterLink
+        title="QRCodes"
         class="header-link"
         :class="{ 'is-blue': useRoute().name === 'qrcodes' }"
         to="/qrcodes"
@@ -37,7 +43,7 @@ header {
   margin: 2rem 3rem;
 }
 
-@media screen and (max-width: 500px) {
+@media screen and (max-width: 580px) {
   .pegasow-logo {
     width: 180px;
     margin: 2rem auto;
@@ -55,10 +61,18 @@ header {
 }
 
 .header-link {
-  box-sizing: border-box;
   text-decoration: none;
   font-size: 1rem;
   color: var(--light-gray);
+}
+
+.header-link::before {
+  display: block;
+  content: attr(title);
+  font-weight: bold;
+  height: 0;
+  overflow: hidden;
+  visibility: hidden;
 }
 
 .is-blue {

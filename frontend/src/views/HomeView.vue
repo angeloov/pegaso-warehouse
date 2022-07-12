@@ -1,10 +1,8 @@
 <script setup lang="ts">
 import Header from "@/components/Header.vue";
 import addComponentIcon from "@/assets/icons/add-item.svg";
-import addItemIcon from "@/assets/icons/add-item.svg";
 import ViewTag from "../components/ViewTag.vue";
 
-import client from "@/utils/trpc";
 import router from "@/router";
 
 import { useUserDataStore } from "@/stores/userData";

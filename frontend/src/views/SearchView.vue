@@ -9,6 +9,7 @@ const state = reactive({
   projectName: "",
   position: "",
   tags: [],
+  searchResult: [],
 });
 
 const onFormSubmit = async () => {
@@ -19,6 +20,7 @@ const onFormSubmit = async () => {
     // tags: [],
   });
 
+  state.searchResult = res;
   console.log(res);
 };
 </script>
@@ -28,7 +30,7 @@ const onFormSubmit = async () => {
     <Header />
 
     <main>
-      <h1 class="welcome-title">Search page</h1>
+      <h1 class="welcome-title">Ricerca</h1>
 
       <form @submit.prevent="onFormSubmit">
         <span class="p-input-icon-left">
@@ -53,14 +55,14 @@ const onFormSubmit = async () => {
         <Button type="submit" value="Invia" />
       </form>
 
-      <SearchResult itemName="Prova" />
-      <SearchResult itemName="Ciao" />
-      <SearchResult itemName="Ciao" />
+      <span v-if="state.searchResult" v-for="result in state.searchResult">
+        <SearchResult :itemName="result.name" />
+      </span>
     </main>
   </div>
 </template>
 
-<style>
+<style scoped>
 .welcome-title {
   font-weight: 600;
 }

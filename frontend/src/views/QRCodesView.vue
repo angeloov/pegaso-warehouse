@@ -3,8 +3,10 @@ import Header from "@/components/Header.vue";
 </script>
 
 <template>
-  <main>
+  <div>
     <Header />
-    <p>Qrcodes</p>
-  </main>
+    <main>
+      <p>Qrcodes</p>
+    </main>
+  </div>
 </template>
