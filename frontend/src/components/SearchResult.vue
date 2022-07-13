@@ -3,6 +3,7 @@ import itemIcon from "@/assets/icons/item.svg";
 
 defineProps<{
   itemName: string;
+  id: string;
 }>();
 </script>
 
@@ -11,24 +12,25 @@ defineProps<{
     <span class="left-container">
       <img :src="itemIcon" alt="item" />
 
-      <div>
-        <p>{{ itemName }}</p>
-        <p>PF456V/</p>
+      <div class="text">
+        <p class="item-name">{{ itemName }}</p>
+        <p class="item-desc">{{ id }}</p>
       </div>
     </span>
     <button class="action-button">Vedi dettagli</button>
   </div>
 </template>
 
-<style>
+<style scoped>
 .search-view {
   display: flex;
   justify-content: space-between;
 
   background: #fafafa;
-  border: 0.5px solid #c0c0c0;
-  padding: 1rem;
-  border-radius: 1rem;
+  /* border: 1px solid #c0c0c0; */
+  box-shadow: 0 0 0 .75px #c0c0c0;
+  padding: 1.25rem 1.5rem;
+  border-radius: 1.25rem;
 }
 
 .left-container {
@@ -44,11 +46,25 @@ defineProps<{
   color: #1e6bc6;
   font-size: 1.1rem;
   font-weight: 600;
-  letter-spacing: -0.02em;
+  letter-spacing: 0;
+}
+
+.text p {
+  margin: 0;
 }
 
 .action-button:hover {
   color: #2788ff;
   cursor: pointer;
+}
+
+.item-name {
+  font-weight: 600;
+  font-size: 1.2rem;
+  color: #101010;
+}
+
+.item-desc {
+  color: #4a4a4a;
 }
 </style>

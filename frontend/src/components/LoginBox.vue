@@ -46,7 +46,7 @@ const onFormSubmit = async () => {
 
     <form @submit.prevent="onFormSubmit">
       <span class="p-float-label">
-        <InputText id="username" type="text" v-model="state.username" />
+        <InputText id="username" type="text" v-model="state.username" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false" />
         <label for="username">Username</label>
       </span>
 

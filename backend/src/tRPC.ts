@@ -4,7 +4,10 @@ import { z } from "zod";
 import * as utils from "./jwt/utils";
 import type { Context } from "./index";
 
+import jwt from "jsonwebtoken";
+
 import itemModel from "./mongoose/Item";
+import computeNextId from "./utils/computeNextId";
 
 const appRouter = trpc
   .router<Context>()
@@ -33,10 +36,16 @@ const appRouter = trpc
       partNumber: z.string().optional(),
     }),
     async resolve({ input, ctx }) {
-      console.log(input);
+      const count = await itemModel.count();
+      let lastID;
+      if (count > 0) {
+        lastID = (await itemModel.find().skip(count - 1))[0]["_id"];
+      }
+
+      const { id: userID } = jwt.verify(ctx.jwt, process.env.ACCESS_TOKEN_SECRET);
 
       await itemModel.create({
-        _id: "AA001", // ID
+        _id: (count > 0) ? computeNextId(lastID) : "AA000",
         name: input.name,
         quantity: input.quantity,
         position: input.position,
@@ -44,7 +53,7 @@ const appRouter = trpc
         project_name: input.projectName,
         history: [
           {
-            user_id: "62c6c383b6aabd9606717162", // User id
+            user_id: userID,
             date: new Date(),
           },
         ],
