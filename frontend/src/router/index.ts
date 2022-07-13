@@ -1,5 +1,5 @@
 import { createRouter, createWebHistory } from "vue-router";
-import IndexView from "../views/IndexView.vue";
+import IndexView from "@/views/IndexView.vue";
 import HomeView from "@/views/HomeView.vue";
 import SearchView from "@/views/SearchView.vue";
 import QRCodesView from "@/views/QRCodesView.vue";

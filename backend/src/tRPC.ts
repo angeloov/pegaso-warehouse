@@ -45,7 +45,7 @@ const appRouter = trpc
       const { id: userID } = jwt.verify(ctx.jwt, process.env.ACCESS_TOKEN_SECRET);
 
       await itemModel.create({
-        _id: (count > 0) ? computeNextId(lastID) : "AA000",
+        _id: count > 0 ? computeNextId(lastID) : "AA000",
         name: input.name,
         quantity: input.quantity,
         position: input.position,

@@ -1,6 +1,7 @@
 <script setup lang="ts">
 import itemIcon from "@/assets/icons/item.svg";
 import editIcon from "@/assets/icons/edit.svg";
+import RemoveItems from "./RemoveItems.vue";
 </script>
 
 <template>
@@ -8,14 +9,14 @@ import editIcon from "@/assets/icons/edit.svg";
     <div class="window">
       <img :src="itemIcon" alt="Item" class="item-icon" />
 
-      <div>
+      <main>
         <div class="top-part">
           <div class="item-info">
             <span class="name-info">
               <h1>L7805CV</h1>
 
               <button class="edit-button">
-                <img :src="editIcon" alt="" />
+                <img :src="editIcon" alt="edit button" class="edit-button" />
               </button>
             </span>
             <p>AA000</p>
@@ -30,13 +31,23 @@ import editIcon from "@/assets/icons/edit.svg";
             <p>Nome progetto: nome</p>
             <p>Tags: nome</p>
           </div>
+
+          <RemoveItems />
         </div>
-      </div>
+
+        <div class="bottom-part">
+          <h1>Cronologia modifiche</h1>
+        </div>
+      </main>
     </div>
   </div>
 </template>
 
 <style scoped>
+main {
+  width: 100%;
+}
+
 .overlay {
   position: absolute;
   background: #20202069;
@@ -44,6 +55,10 @@ import editIcon from "@/assets/icons/edit.svg";
   left: 0;
   right: 0;
   bottom: 0;
+}
+
+.edit-button {
+  margin-left: 8px;
 }
 
 .window {
@@ -95,5 +110,10 @@ h1 {
   border-radius: 1rem;
 
   margin: auto 0;
+}
+
+.central-part {
+  display: flex;
+  width: 100%;
 }
 </style>
