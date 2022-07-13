@@ -4,6 +4,7 @@
 :root {
   --light-gray: #727272;
   --primevue-gray: #495057;
+  /* --border-color */
 
   --primary-color: #3b82f6;
 
@@ -72,5 +73,5 @@ body {
 }
 
 h1, h2 {
-  letter-spacing: -0.03em;
+  letter-spacing: -0.02em;
 }

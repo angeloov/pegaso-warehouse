@@ -5,7 +5,7 @@ import Header from "@/components/Header.vue";
 
 <template>
   <div class="index-page">
-    <Header />
+    <Header hideNav/>
 
     <main>
       <LoginBox />
@@ -16,7 +16,7 @@ import Header from "@/components/Header.vue";
 <style scoped>
 .index-page {
   height: 100vh;
-  background-image: url(../assets/index-background.jpg);
+  background-image: url(../assets/index-background.png);
   background-repeat: no-repeat;
   background-position: center;
   background-size: cover;

@@ -55,7 +55,7 @@ const onFormSubmit = async () => {
         <label for="password">Password</label>
       </span>
 
-      <Button type="submit" label="Submit" />
+      <Button type="submit" label="Login" />
     </form>
   </div>
 </template>

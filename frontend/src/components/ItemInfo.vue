@@ -1,7 +1,10 @@
 <script setup lang="ts">
 import itemIcon from "@/assets/icons/item.svg";
 import editIcon from "@/assets/icons/edit.svg";
+import addIcon from "@/assets/icons/add.svg";
+
 import RemoveItems from "./RemoveItems.vue";
+import HistoryRecord from "./HistoryRecord.vue";
 </script>
 
 <template>
@@ -23,6 +26,10 @@ import RemoveItems from "./RemoveItems.vue";
           </div>
 
           <div class="quantity-container">Disponibilità: 12</div>
+
+          <button class="close-button">
+            <img :src="addIcon" alt="" />
+          </button>
         </div>
 
         <div class="central-part">
@@ -36,7 +43,11 @@ import RemoveItems from "./RemoveItems.vue";
         </div>
 
         <div class="bottom-part">
-          <h1>Cronologia modifiche</h1>
+          <h1 class="title">Cronologia modifiche</h1>
+
+          <span class="history-container">
+            <HistoryRecord />
+          </span>
         </div>
       </main>
     </div>
@@ -48,6 +59,34 @@ main {
   width: 100%;
 }
 
+.close-button {
+  border: 0;
+  margin: 0;
+  margin-left: auto;
+  margin-bottom: auto;
+  padding: 0;
+  line-height: normal;
+  background: #e8e8e8;
+  border-radius: 1000rem;
+
+  position: relative;
+  width: 2.5rem;
+  height: 2.5rem;
+}
+
+.close-button > img {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%) rotate(45deg);
+  width: 2rem;
+  height: 2rem;
+  cursor: pointer;
+}
+
+.bottom-part > .title {
+  margin-bottom: 1rem;
+}
 .overlay {
   position: absolute;
   background: #20202069;
@@ -65,11 +104,14 @@ main {
   background: #f5f9f6;
   padding: 1.5rem;
   display: flex;
+
+  margin: 8rem;
+  border-radius: 2rem;
 }
 .item-icon {
-  margin-top: 1rem;
+  margin: 1rem;
+  margin-right: 2rem;
   margin-bottom: auto;
-  margin-right: 1.5rem;
 }
 
 .item-info > p,
@@ -94,7 +136,7 @@ h1 {
 }
 
 .detailed-info {
-  margin: 3rem 0;
+  margin: 2rem 0;
 }
 .detailed-info > p {
   margin: 0;

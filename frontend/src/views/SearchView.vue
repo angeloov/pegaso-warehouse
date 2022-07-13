@@ -88,8 +88,8 @@ const onFormSubmit = async () => {
       </form>
 
       <div class="results-container">
-        <span v-for="result in state.searchResult">
-          <SearchResult :itemName="result.name" :id="result._id" :key="result._id" />
+        <span v-for="result in state.searchResult" :key="result._id">
+          <SearchResult :itemName="result.name" :id="result._id" />
         </span>
       </div>
     </main>

@@ -15,8 +15,6 @@ import type { UserType } from "./mongoose/User";
 import path from "path";
 require("dotenv").config({ path: path.resolve(__dirname, "../.env") });
 
-console.log(process.env.ACCESS_TOKEN_SECRET);
-
 mongoose.connect(process.env.MONGODB_URI as string);
 
 const app = express();

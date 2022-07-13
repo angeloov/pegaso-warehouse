@@ -1,4 +1,9 @@
 <script setup lang="ts">
+defineProps<{
+  hideNav?: boolean;
+}>()
+
+
 import logo from "@/assets/logo.svg";
 import { RouterLink } from "vue-router";
 import { useRoute } from "vue-router";
@@ -8,7 +13,7 @@ import { useRoute } from "vue-router";
   <header class="flex">
     <img :src="logo" alt="logo" class="pegasow-logo select-none" />
 
-    <span class="link-container">
+    <span class="link-container" v-if="!hideNav">
       <RouterLink
         title="Home"
         class="header-link"
