@@ -78,6 +78,38 @@ const appRouter = trpc
 
       return query;
     },
+  })
+  .mutation("editItem", {
+    input: z.object({
+      itemID: z.string(),
+      modifications: z.object({
+        name: z.string().optional(),
+        quantity: z.number().optional(),
+        position: z.string().optional(),
+        tags: z.string().array().optional(),
+        projectName: z.string().optional(),
+      }),
+    }),
+    async resolve({ ctx, input }) {
+      if (Object.keys(input.modifications).length > 0) {
+        await itemModel.updateOne(
+          {
+            _id: input.itemID,
+          },
+          {
+            name: input.modifications.name,
+            quantity: input.modifications.quantity,
+            position: input.modifications.position,
+            projectName: input.modifications.projectName,
+            history: {
+              $push
+            }
+          }
+        );
+
+        
+      }
+    },
   });
 
 export default appRouter;

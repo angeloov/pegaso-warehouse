@@ -5,10 +5,16 @@ import addIcon from "@/assets/icons/add.svg";
 
 import RemoveItems from "./RemoveItems.vue";
 import HistoryRecord from "./HistoryRecord.vue";
+
+import { reactive } from "vue";
+
+const state = reactive({
+  isClosed: false,
+});
 </script>
 
 <template>
-  <div class="overlay">
+  <div class="overlay" :class="{ hidden: state.isClosed }">
     <div class="window">
       <img :src="itemIcon" alt="Item" class="item-icon" />
 
@@ -17,17 +23,17 @@ import HistoryRecord from "./HistoryRecord.vue";
           <div class="item-info">
             <span class="name-info">
               <h1>L7805CV</h1>
-
-              <button class="edit-button">
-                <img :src="editIcon" alt="edit button" class="edit-button" />
-              </button>
             </span>
             <p>AA000</p>
           </div>
 
           <div class="quantity-container">Disponibilità: 12</div>
 
-          <button class="close-button">
+          <button class="edit-icon">
+            <img :src="editIcon" alt="" />
+          </button>
+
+          <button class="close-button" @click="() => (state.isClosed = !state.isClosed)">
             <img :src="addIcon" alt="" />
           </button>
         </div>
@@ -55,6 +61,9 @@ import HistoryRecord from "./HistoryRecord.vue";
 </template>
 
 <style scoped>
+.hidden {
+  display: none;
+}
 main {
   width: 100%;
 }
@@ -62,7 +71,6 @@ main {
 .close-button {
   border: 0;
   margin: 0;
-  margin-left: auto;
   margin-bottom: auto;
   padding: 0;
   line-height: normal;
@@ -70,8 +78,8 @@ main {
   border-radius: 1000rem;
 
   position: relative;
-  width: 2.5rem;
-  height: 2.5rem;
+  width: 3.5rem;
+  height: 3.5rem;
 }
 
 .close-button > img {
@@ -79,13 +87,23 @@ main {
   top: 50%;
   left: 50%;
   transform: translate(-50%, -50%) rotate(45deg);
-  width: 2rem;
-  height: 2rem;
+  width: 3rem;
+  height: 3rem;
   cursor: pointer;
+}
+
+.edit-icon {
+  margin-left: auto;
+  margin-top: auto;
+  margin-bottom: auto;
 }
 
 .bottom-part > .title {
   margin-bottom: 1rem;
+}
+
+.menu-container {
+  margin-left: auto;
 }
 .overlay {
   position: absolute;
@@ -94,10 +112,6 @@ main {
   left: 0;
   right: 0;
   bottom: 0;
-}
-
-.edit-button {
-  margin-left: 8px;
 }
 
 .window {
@@ -157,5 +171,6 @@ h1 {
 .central-part {
   display: flex;
   width: 100%;
+  margin: 1.5rem 0;
 }
 </style>
