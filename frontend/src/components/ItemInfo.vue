@@ -14,6 +14,8 @@ import HistoryRecord from "./HistoryRecord.vue";
 
 import client from "@/utils/trpc";
 import router from "@/router";
+import { useRoute } from "vue-router";
+const route = useRoute();
 
 const state = reactive({
   itemName: "",
@@ -25,7 +27,8 @@ const state = reactive({
 });
 
 const closeWindow = () => {
-  router.replace({ itemID: null });
+  console.log({ itemID: null });
+  router.push({ path: "/search", query: { ...route.query, itemID: null } });
   state.isClosed = !state.isClosed;
 };
 

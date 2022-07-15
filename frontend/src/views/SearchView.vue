@@ -6,6 +6,7 @@ import { reactive, watch } from "vue";
 import client from "@/utils/trpc";
 
 import { useRoute } from "vue-router";
+import router from "@/router";
 
 const route = useRoute();
 
@@ -40,9 +41,19 @@ const onFormSubmit = async () => {
   });
 
   state.searchResult = res;
+
+  router.push({
+    path: "/search",
+    query: {
+      itemName: state.itemName.trim(),
+      projectName: state.projectName.trim(),
+      position: state.position.trim(),
+      tags: state.tags.join(","),
+    },
+  });
 };
 
-onFormSubmit();
+// onFormSubmit();
 </script>
 
 <template>
@@ -113,10 +124,7 @@ onFormSubmit();
       </div>
     </main>
 
-    <ItemInfo
-      v-if="itemID"
-      :itemID="itemID"
-    />
+    <ItemInfo v-if="itemID" :itemID="itemID" :key="route.fullPath" />
   </div>
 </template>
 

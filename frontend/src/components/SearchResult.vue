@@ -11,7 +11,7 @@ const emit = defineEmits(["shouldOpenItemInfo"]);
 
 const openItemInfo = () => {
   emit("shouldOpenItemInfo");
-  router.push(`/search?itemID=${props.id}`);
+  router.push({ path: "/search", query: { itemID: props.id } });
 };
 </script>
 

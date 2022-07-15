@@ -1,5 +1,3 @@
-import computeNextId from "./utils/computeNextId";
-
 import * as trpc from "@trpc/server";
 import * as trpcExpress from "@trpc/server/adapters/express";
 import express from "express";
@@ -10,6 +8,7 @@ import * as utils from "./jwt/utils";
 import cors from "cors";
 
 import type { UserType } from "./mongoose/User";
+import { TRPCError } from "@trpc/server";
 
 // TODO: Fix this
 import path from "path";
@@ -35,7 +34,7 @@ const createContext = ({ req, res }: trpcExpress.CreateExpressContextOptions) =>
       jwt: req.headers.authorization.split(" ")[1],
     };
   } else {
-    return { jwt: null };
+    throw new TRPCError({ message: "Access token not provided", code: "UNAUTHORIZED" });
   }
 };
 export type Context = trpc.inferAsyncReturnType<typeof createContext>;
