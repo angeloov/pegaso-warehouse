@@ -1,13 +1,11 @@
 <script setup lang="ts">
-import { RouterView } from "vue-router";
-import client from "@/utils/trpc";
+import { RouterView, useRoute } from "vue-router";
+const route = useRoute();
 </script>
 
 <template>
   <div>
-    <Suspense>
-      <RouterView />
-    </Suspense>
+    <RouterView :key="route.fullPath"/>
   </div>
 </template>
 

@@ -1,8 +1,7 @@
 <script setup lang="ts">
 defineProps<{
   hideNav?: boolean;
-}>()
-
+}>();
 
 import logo from "@/assets/logo.svg";
 import { RouterLink } from "vue-router";

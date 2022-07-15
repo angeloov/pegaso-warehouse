@@ -1,10 +1,18 @@
 <script setup lang="ts">
 import itemIcon from "@/assets/icons/item.svg";
+import router from "@/router";
 
-defineProps<{
+const props = defineProps<{
   itemName: string;
   id: string;
 }>();
+
+const emit = defineEmits(["shouldOpenItemInfo"]);
+
+const openItemInfo = () => {
+  emit("shouldOpenItemInfo");
+  router.push(`/search?itemID=${props.id}`);
+};
 </script>
 
 <template>
@@ -17,7 +25,7 @@ defineProps<{
         <p class="item-desc">{{ id }}</p>
       </div>
     </span>
-    <button class="action-button">Vedi dettagli</button>
+    <button class="action-button" @click="openItemInfo">Vedi dettagli</button>
   </div>
 </template>
 
@@ -28,7 +36,7 @@ defineProps<{
 
   background: #fafafa;
   /* border: 1px solid #c0c0c0; */
-  box-shadow: 0 0 0 .75px #c0c0c0;
+  box-shadow: 0 0 0 0.75px #c0c0c0;
   padding: 1.25rem 1.5rem;
   border-radius: 1.25rem;
 }

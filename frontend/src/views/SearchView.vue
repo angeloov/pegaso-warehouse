@@ -2,20 +2,34 @@
 import Header from "@/components/Header.vue";
 import SearchResult from "@/components/SearchResult.vue";
 import ItemInfo from "@/components/ItemInfo.vue";
-import { reactive } from "vue";
+import { reactive, watch } from "vue";
 import client from "@/utils/trpc";
 
+import { useRoute } from "vue-router";
+
+const route = useRoute();
+
+const { itemID, itemName, projectName, position, tags } = route.query;
+
 const state = reactive({
-  itemName: "",
-  projectName: "",
-  position: "",
-  tags: [],
+  itemName: itemName ?? "",
+  projectName: projectName ?? "",
+  position: position ?? "",
+  tags: tags ? tags.split(",") : [],
+  itemInfoIsOpened: !!itemID,
   searchResult: [],
 });
 
-const openedItemState = reactive({
-  itemName: "",
-});
+const onOpenWindow = () => {
+  state.itemInfoIsOpened = !state.itemInfoIsOpened;
+};
+
+watch(
+  () => route.query.itemID,
+  () => {
+    console.log(route.params);
+  }
+);
 
 const onFormSubmit = async () => {
   const res = await client.query("search", {
@@ -26,8 +40,9 @@ const onFormSubmit = async () => {
   });
 
   state.searchResult = res;
-  console.log(res);
 };
+
+onFormSubmit();
 </script>
 
 <template>
@@ -89,12 +104,19 @@ const onFormSubmit = async () => {
 
       <div class="results-container">
         <span v-for="result in state.searchResult" :key="result._id">
-          <SearchResult :itemName="result.name" :id="result._id" />
+          <SearchResult
+            @shouldOpenItemInfo="onOpenWindow"
+            :itemName="result.name"
+            :id="result._id"
+          />
         </span>
       </div>
     </main>
 
-    <ItemInfo />
+    <ItemInfo
+      v-if="itemID"
+      :itemID="itemID"
+    />
   </div>
 </template>
 

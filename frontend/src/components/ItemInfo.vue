@@ -1,4 +1,10 @@
 <script setup lang="ts">
+const props = defineProps<{
+  itemID?: string;
+}>();
+
+import { reactive, onMounted } from "vue";
+
 import itemIcon from "@/assets/icons/item.svg";
 import editIcon from "@/assets/icons/edit.svg";
 import addIcon from "@/assets/icons/add.svg";
@@ -6,10 +12,40 @@ import addIcon from "@/assets/icons/add.svg";
 import RemoveItems from "./RemoveItems.vue";
 import HistoryRecord from "./HistoryRecord.vue";
 
-import { reactive } from "vue";
+import client from "@/utils/trpc";
+import router from "@/router";
 
 const state = reactive({
+  itemName: "",
+  quantity: 0,
+  position: "",
+  projectName: "",
+  tags: [],
   isClosed: false,
+});
+
+const closeWindow = () => {
+  router.replace({ itemID: null });
+  state.isClosed = !state.isClosed;
+};
+
+onMounted(() => {
+  const fetchData = async () => {
+    console.log(props.itemID);
+    const itemInfo = await client.query("getItemInfoByID", {
+      itemID: props.itemID,
+    });
+
+    state.quantity = itemInfo.quantity;
+    state.itemName = itemInfo.name;
+    state.position = itemInfo.position;
+    state.projectName = itemInfo.project_name;
+    state.tags = itemInfo.tags;
+
+    console.log(itemInfo);
+  };
+
+  fetchData();
 });
 </script>
 
@@ -22,27 +58,27 @@ const state = reactive({
         <div class="top-part">
           <div class="item-info">
             <span class="name-info">
-              <h1>L7805CV</h1>
+              <h1>{{ state.itemName }}</h1>
             </span>
-            <p>AA000</p>
+            <p>{{ itemID }}</p>
           </div>
 
-          <div class="quantity-container">Disponibilità: 12</div>
+          <div class="quantity-container">Disponibilità: {{ state.quantity }}</div>
 
           <button class="edit-icon">
             <img :src="editIcon" alt="" />
           </button>
 
-          <button class="close-button" @click="() => (state.isClosed = !state.isClosed)">
+          <button class="close-button" @click="closeWindow">
             <img :src="addIcon" alt="" />
           </button>
         </div>
 
         <div class="central-part">
           <div class="detailed-info">
-            <p>Posizione: Pegaso</p>
-            <p>Nome progetto: nome</p>
-            <p>Tags: nome</p>
+            <p>Posizione: {{ state.position }}</p>
+            <p>Nome progetto: {{ state.projectName }}</p>
+            <p>Tags: {{ state.tags.join(", ") }}</p>
           </div>
 
           <RemoveItems />
