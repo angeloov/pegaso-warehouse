@@ -3,7 +3,7 @@ const props = defineProps<{
   itemID?: string;
 }>();
 
-import { reactive, onMounted, defineEmits } from "vue";
+import { reactive, onMounted } from "vue";
 
 import itemIcon from "@/assets/icons/item.svg";
 import editIcon from "@/assets/icons/edit.svg";
@@ -13,9 +13,6 @@ import RemoveItems from "./RemoveItems.vue";
 import HistoryRecord from "./HistoryRecord.vue";
 
 import client from "@/utils/trpc";
-import router from "@/router";
-import { useRoute } from "vue-router";
-const route = useRoute();
 
 const state = reactive({
   itemName: "",
@@ -25,27 +22,17 @@ const state = reactive({
   tags: [],
 });
 
-const closeItemInfoWindow = () => {
-  router.back();
-};
+const emit = defineEmits(["closeWindow"]);
+const closeItemInfoWindow = () => emit("closeWindow");
 
-onMounted(() => {
-  const fetchData = async () => {
-    console.log(props.itemID);
-    const itemInfo = await client.query("getItemInfoByID", {
-      itemID: props.itemID,
-    });
+onMounted(async () => {
+  const itemInfo = await client.query("getItemInfoByID", { itemID: props.itemID });
 
-    state.quantity = itemInfo.quantity;
-    state.itemName = itemInfo.name;
-    state.position = itemInfo.position;
-    state.projectName = itemInfo.project_name;
-    state.tags = itemInfo.tags;
-
-    console.log(itemInfo);
-  };
-
-  fetchData();
+  state.quantity = itemInfo.quantity;
+  state.itemName = itemInfo.name;
+  state.position = itemInfo.position;
+  state.projectName = itemInfo.project_name;
+  state.tags = itemInfo.tags;
 });
 </script>
 
@@ -132,6 +119,10 @@ main {
   margin-left: auto;
   margin-top: auto;
   margin-bottom: auto;
+}
+
+.title {
+  font-size: 1.5rem;
 }
 
 .bottom-part > .title {

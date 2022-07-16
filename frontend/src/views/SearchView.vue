@@ -10,7 +10,7 @@ import router from "@/router";
 
 const route = useRoute();
 
-const { itemID, itemName, projectName, position, tags } = route.query;
+const { itemName, projectName, position, tags } = route.query;
 
 const state = reactive({
   itemName: itemName ?? "",
@@ -22,10 +22,16 @@ const state = reactive({
 
 const windowState = reactive({
   itemInfoWindowIsOpen: false,
+  itemID: null,
 });
 
-const changeWindowIsOpenState = () => {
-  windowState.itemInfoWindowIsOpen = !windowState.itemInfoWindowIsOpen;
+const onOpenWindow = id => {
+  windowState.itemInfoWindowIsOpen = true;
+  windowState.itemID = id;
+};
+
+const onCloseWindow = id => {
+  windowState.itemInfoWindowIsOpen = false;
 };
 
 (async () => {
@@ -113,19 +119,15 @@ const onFormSubmit = async () => {
 
       <div class="results-container">
         <span v-for="result in state.searchResult" :key="result._id">
-          <SearchResult
-            @openWindow="changeWindowIsOpenState"
-            :itemName="result.name"
-            :id="result._id"
-          />
+          <SearchResult @openWindow="onOpenWindow" :itemName="result.name" :id="result._id" />
         </span>
       </div>
     </main>
 
     <ItemInfo
-      v-if="itemID"
-      :itemID="itemID"
-      :key="[route.fullPath, windowState.itemInfoWindowIsOpen]"
+      v-if="windowState.itemInfoWindowIsOpen"
+      :itemID="windowState.itemID"
+      @closeWindow="onCloseWindow"
     />
   </div>
 </template>

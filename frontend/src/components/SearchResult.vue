@@ -10,8 +10,7 @@ const props = defineProps<{
 const emit = defineEmits(["openWindow"]);
 
 const openItemInfoWindow = () => {
-  emit("openWindow");
-  router.push({ path: "/search", query: { itemID: props.id } });
+  emit("openWindow", props.id);
 };
 </script>
 
