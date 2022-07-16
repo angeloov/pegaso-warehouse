@@ -46,7 +46,15 @@ const onFormSubmit = async () => {
 
     <form @submit.prevent="onFormSubmit">
       <span class="p-float-label">
-        <InputText id="username" type="text" v-model="state.username" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false" />
+        <InputText
+          id="username"
+          type="text"
+          v-model="state.username"
+          autocomplete="off"
+          autocorrect="off"
+          autocapitalize="off"
+          spellcheck="false"
+        />
         <label for="username">Username</label>
       </span>
 
@@ -65,9 +73,12 @@ const onFormSubmit = async () => {
   margin: auto;
 }
 .login-box {
-  background: #f1f1f166;
-  /* filter: blur(1px); */
-  /* backdrop-filter: blur(40px); */
+  backdrop-filter: blur(16px) saturate(180%);
+  -webkit-backdrop-filter: blur(12px) saturate(180%);
+  background-color: rgba(198, 198, 198, 0.5);
+  border-radius: 1rem;
+  border: 1px solid rgba(255, 255, 255, 0.125);
+
   border-radius: 2rem;
   padding: 2rem 4rem;
 }
@@ -75,6 +86,7 @@ const onFormSubmit = async () => {
   font-weight: 700;
   text-align: center;
   margin-bottom: 3rem;
+  color: #101010;
 }
 
 .p-float-label {
