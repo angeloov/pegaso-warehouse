@@ -3,7 +3,7 @@ const props = defineProps<{
   itemID?: string;
 }>();
 
-import { reactive, onMounted } from "vue";
+import { reactive, onMounted, defineEmits } from "vue";
 
 import itemIcon from "@/assets/icons/item.svg";
 import editIcon from "@/assets/icons/edit.svg";
@@ -23,13 +23,10 @@ const state = reactive({
   position: "",
   projectName: "",
   tags: [],
-  isClosed: false,
 });
 
-const closeWindow = () => {
-  console.log({ itemID: null });
-  router.push({ path: "/search", query: { ...route.query, itemID: null } });
-  state.isClosed = !state.isClosed;
+const closeItemInfoWindow = () => {
+  router.back();
 };
 
 onMounted(() => {
@@ -53,7 +50,7 @@ onMounted(() => {
 </script>
 
 <template>
-  <div class="overlay" :class="{ hidden: state.isClosed }">
+  <div class="overlay">
     <div class="window">
       <img :src="itemIcon" alt="Item" class="item-icon" />
 
@@ -72,7 +69,7 @@ onMounted(() => {
             <img :src="editIcon" alt="" />
           </button>
 
-          <button class="close-button" @click="closeWindow">
+          <button class="close-button" @click="closeItemInfoWindow">
             <img :src="addIcon" alt="" />
           </button>
         </div>

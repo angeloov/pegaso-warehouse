@@ -7,10 +7,10 @@ const props = defineProps<{
   id: string;
 }>();
 
-const emit = defineEmits(["shouldOpenItemInfo"]);
+const emit = defineEmits(["openWindow"]);
 
-const openItemInfo = () => {
-  emit("shouldOpenItemInfo");
+const openItemInfoWindow = () => {
+  emit("openWindow");
   router.push({ path: "/search", query: { itemID: props.id } });
 };
 </script>
@@ -25,7 +25,7 @@ const openItemInfo = () => {
         <p class="item-desc">{{ id }}</p>
       </div>
     </span>
-    <button class="action-button" @click="openItemInfo">Vedi dettagli</button>
+    <button class="action-button" @click="openItemInfoWindow">Vedi dettagli</button>
   </div>
 </template>
 

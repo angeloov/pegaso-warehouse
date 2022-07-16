@@ -17,31 +17,29 @@ const state = reactive({
   projectName: projectName ?? "",
   position: position ?? "",
   tags: tags ? tags.split(",") : [],
-  itemInfoIsOpened: !!itemID,
   searchResult: [],
 });
 
-const onOpenWindow = () => {
-  state.itemInfoIsOpened = !state.itemInfoIsOpened;
+const windowState = reactive({
+  itemInfoWindowIsOpen: false,
+});
+
+const changeWindowIsOpenState = () => {
+  windowState.itemInfoWindowIsOpen = !windowState.itemInfoWindowIsOpen;
 };
 
-watch(
-  () => route.query.itemID,
-  () => {
-    console.log(route.params);
+(async () => {
+  if (state.itemName || state.projectName || state.position || state.tags.length > 0) {
+    state.searchResult = await client.query("search", {
+      itemName: state.itemName.trim(),
+      projectName: state.projectName.trim(),
+      position: state.position.trim(),
+      // tags: [],
+    });
   }
-);
+})();
 
 const onFormSubmit = async () => {
-  const res = await client.query("search", {
-    itemName: state.itemName.trim(),
-    projectName: state.projectName.trim(),
-    position: state.position.trim(),
-    // tags: [],
-  });
-
-  state.searchResult = res;
-
   router.push({
     path: "/search",
     query: {
@@ -109,14 +107,14 @@ const onFormSubmit = async () => {
           <label for="item-name">Tags</label>
 
           <Chips v-model="state.tags" class="tags-field" separator="," />
-          <Button type="submit" label="Invia" />
+          <Button type="submit" label="Cerca" />
         </div>
       </form>
 
       <div class="results-container">
         <span v-for="result in state.searchResult" :key="result._id">
           <SearchResult
-            @shouldOpenItemInfo="onOpenWindow"
+            @openWindow="changeWindowIsOpenState"
             :itemName="result.name"
             :id="result._id"
           />
@@ -124,7 +122,11 @@ const onFormSubmit = async () => {
       </div>
     </main>
 
-    <ItemInfo v-if="itemID" :itemID="itemID" :key="route.fullPath" />
+    <ItemInfo
+      v-if="itemID"
+      :itemID="itemID"
+      :key="[route.fullPath, windowState.itemInfoWindowIsOpen]"
+    />
   </div>
 </template>
 
