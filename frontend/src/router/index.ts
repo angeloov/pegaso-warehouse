@@ -4,6 +4,7 @@ import HomeView from "@/views/HomeView.vue";
 import SearchView from "@/views/SearchView.vue";
 import QRCodesView from "@/views/QRCodesView.vue";
 import AddItemView from "@/views/AddItemView.vue";
+import NotFoundView from "@/views/404.vue"
 
 import fetchUserData from "@/utils/fetchUserData";
 
@@ -35,6 +36,11 @@ const router = createRouter({
       path: "/add",
       name: "add",
       component: AddItemView,
+    },
+    {
+      path: "/404",
+      name: "404",
+      component: NotFoundView,
     },
   ],
 });

@@ -19,14 +19,17 @@ const getRandomEmoji = () => {
     <Header />
 
     <main>
-      <h1 class="welcome-title">
-        Ciao, {{ userData.firstName }} {{ getRandomEmoji() }}
-      </h1>
+      <h1 class="welcome-title">Ciao, {{ userData.firstName }} {{ getRandomEmoji() }}</h1>
 
       <div class="button-container">
         <Button @click="() => router.push('/add')" type="button" class="primary-btn">
           <img alt="logo" :src="addComponentIcon" class="primary-btn-icon" />
           <span class="ml-3 font-bold text-xl">Aggiungi oggetto</span>
+        </Button>
+
+        <Button @click="() => router.push('/add')" type="button" class="primary-btn">
+          <img alt="logo" :src="addComponentIcon" class="primary-btn-icon" />
+          <span class="ml-3 font-bold text-xl">Scannerizza QRCode</span>
         </Button>
       </div>
 
