@@ -1,7 +1,11 @@
 <script setup lang="ts">
 import itemIcon from "@/assets/icons/item.svg";
 import editIcon from "@/assets/icons/edit.svg";
+import EditItemDialog from "@/components/EditItemDialog.vue";
 import router from "@/router";
+
+import { useDialog } from "primevue/usedialog";
+const dialog = useDialog();
 
 const props = defineProps<{
   itemName: string;
@@ -13,6 +17,7 @@ const emit = defineEmits(["openWindow"]);
 const openItemInfoWindow = () => {
   emit("openWindow", props.id);
 };
+
 </script>
 
 <template>
@@ -28,7 +33,7 @@ const openItemInfoWindow = () => {
 
     <span class="right-container">
       <button class="action-button" @click="openItemInfoWindow">Vedi dettagli</button>
-      <button class="edit-icon">
+      <button class="edit-icon" @click="() => dialog.open(EditItemDialog, {})">
         <img :src="editIcon" alt="" />
       </button>
     </span>

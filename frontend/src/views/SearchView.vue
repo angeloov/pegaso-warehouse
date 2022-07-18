@@ -63,6 +63,7 @@ const onFormSubmit = async () => {
 <template>
   <div>
     <Header />
+    <DynamicDialog />
 
     <main>
       <h1 class="welcome-title">Ricerca</h1>
