@@ -6,7 +6,6 @@ const props = defineProps<{
 import { reactive, onMounted } from "vue";
 
 import itemIcon from "@/assets/icons/item.svg";
-import editIcon from "@/assets/icons/edit.svg";
 import addIcon from "@/assets/icons/add.svg";
 
 import RemoveItems from "./RemoveItems.vue";
@@ -19,6 +18,7 @@ const state = reactive({
   quantity: 0,
   position: "",
   projectName: "",
+  history: [],
   tags: [],
 });
 
@@ -32,6 +32,7 @@ onMounted(async () => {
   state.itemName = itemInfo.name;
   state.position = itemInfo.position;
   state.projectName = itemInfo.project_name;
+  state.history = itemInfo.history;
   state.tags = itemInfo.tags;
 });
 </script>
@@ -52,10 +53,6 @@ onMounted(async () => {
 
           <div class="quantity-container">Disponibilità: {{ state.quantity }}</div>
 
-          <button class="edit-icon">
-            <img :src="editIcon" alt="" />
-          </button>
-
           <button class="close-button" @click="closeItemInfoWindow">
             <img :src="addIcon" alt="" />
           </button>
@@ -75,7 +72,9 @@ onMounted(async () => {
           <h1 class="title">Cronologia modifiche</h1>
 
           <span class="history-container">
-            <HistoryRecord />
+            <div v-for="snapshot in state.history" :key="snapshot.key">
+              <HistoryRecord :snapshot="snapshot" />
+            </div>
           </span>
         </div>
       </main>
@@ -95,6 +94,8 @@ main {
   border: 0;
   margin: 0;
   margin-bottom: auto;
+  margin-left: auto;
+
   padding: 0;
   line-height: normal;
   background: #e8e8e8;
@@ -113,12 +114,6 @@ main {
   width: 3rem;
   height: 3rem;
   cursor: pointer;
-}
-
-.edit-icon {
-  margin-left: auto;
-  margin-top: auto;
-  margin-bottom: auto;
 }
 
 .title {
@@ -178,11 +173,11 @@ h1 {
 
 .detailed-info {
   margin: 2rem 0;
+  font-size: 1.2rem;
+  font-weight: 500;
 }
 .detailed-info > p {
   margin: 0;
-  font-weight: 500;
-  font-size: 1rem;
 }
 
 .quantity-container {

@@ -1,5 +1,6 @@
 <script setup lang="ts">
 import itemIcon from "@/assets/icons/item.svg";
+import editIcon from "@/assets/icons/edit.svg";
 import router from "@/router";
 
 const props = defineProps<{
@@ -24,7 +25,13 @@ const openItemInfoWindow = () => {
         <p class="item-desc">{{ id }}</p>
       </div>
     </span>
-    <button class="action-button" @click="openItemInfoWindow">Vedi dettagli</button>
+
+    <span class="right-container">
+      <button class="action-button" @click="openItemInfoWindow">Vedi dettagli</button>
+      <button class="edit-icon">
+        <img :src="editIcon" alt="" />
+      </button>
+    </span>
   </div>
 </template>
 
@@ -47,6 +54,12 @@ const openItemInfoWindow = () => {
 .left-container > img {
   margin-right: 1rem;
 }
+
+.right-container {
+  display: flex;
+  place-items: center;
+}
+
 .action-button {
   border: 0;
   background: none;

@@ -1,7 +1,6 @@
 <script setup lang="ts">
 defineProps<{
   hideNav?: boolean;
-  isWhite: boolean;
 }>();
 
 import logo from "@/assets/logo.svg";
@@ -11,7 +10,7 @@ import { useRoute } from "vue-router";
 
 <template>
   <header class="flex">
-    <img :src="logo" alt="logo" :class="{'white': isWhite}" class="pegasow-logo select-none" />
+    <img :src="logo" alt="logo" class="pegasow-logo select-none" />
 
     <span class="link-container" v-if="!hideNav">
       <RouterLink
@@ -46,10 +45,6 @@ header {
 .pegasow-logo {
   width: 220px;
   margin: 2rem 3rem;
-}
-
-.white {
-  filter: invert(100%) sepia(0%) saturate(0%) hue-rotate(177deg) brightness(115%) contrast(96%);
 }
 
 @media screen and (max-width: 580px) {

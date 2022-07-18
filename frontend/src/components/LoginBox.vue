@@ -86,11 +86,12 @@ const onFormSubmit = async () => {
   font-weight: 700;
   text-align: center;
   margin-bottom: 3rem;
-  color: #101010;
+  color: #FAFAFA;
 }
 
 .p-float-label {
   margin: 1.8rem 0;
+  color: #FAFAFA;
 }
 
 .field * {

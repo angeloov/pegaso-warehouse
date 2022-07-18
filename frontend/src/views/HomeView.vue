@@ -1,7 +1,13 @@
 <script setup lang="ts">
 import Header from "@/components/Header.vue";
 import addComponentIcon from "@/assets/icons/add-item.svg";
-import ViewTag from "../components/ViewTag.vue";
+import ViewTag from "@/components/ViewTag.vue";
+import QRReader from "@/components/QRReader.vue";
+import { reactive } from "vue";
+
+const state = reactive({
+  qrReaderIsShown: false,
+});
 
 import router from "@/router";
 
@@ -16,6 +22,10 @@ const getRandomEmoji = () => {
 
 <template>
   <div>
+    <QRReader
+      :isShown="state.qrReaderIsShown"
+      @closeQRReader="() => (state.qrReaderIsShown = false)"
+    />
     <Header />
 
     <main>
@@ -27,7 +37,7 @@ const getRandomEmoji = () => {
           <span class="ml-3 font-bold text-xl">Aggiungi oggetto</span>
         </Button>
 
-        <Button @click="() => router.push('/add')" type="button" class="primary-btn">
+        <Button @click="() => (state.qrReaderIsShown = true)" type="button" class="primary-btn">
           <img alt="logo" :src="addComponentIcon" class="primary-btn-icon" />
           <span class="ml-3 font-bold text-xl">Scannerizza QRCode</span>
         </Button>

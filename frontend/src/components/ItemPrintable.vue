@@ -24,7 +24,7 @@ import itemIcon from "@/assets/icons/item.svg";
   grid-template-columns: 2fr 1fr;
   border-radius: 2rem;
   background-color: #fafafa;
-  padding: 2rem;
+  padding: 1.5rem;
   border: 1px solid #c0c0c0;
 }
 
@@ -42,8 +42,8 @@ import itemIcon from "@/assets/icons/item.svg";
 
 .button {
   display: inline-block;
-  font-size: 1.25rem;
-  font-weight: 500;
+  font-size: 1rem;
+  font-weight: 600;
   border: 0;
   background: none;
   color: #1e6bc6;
@@ -62,7 +62,7 @@ import itemIcon from "@/assets/icons/item.svg";
 
 .big-title {
   font-family: Graphik;
-  font-size: 1.5rem;
+  font-size: 1.25rem;
   font-weight: 600;
   margin: 0 !important;
 

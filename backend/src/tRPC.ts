@@ -84,6 +84,7 @@ const appRouter = trpc
       itemID: z.string(),
     }),
     async resolve({ input }) {
+      // Resolve usernames in history
       return await itemModel.findById(input.itemID);
     },
   });
@@ -99,10 +100,11 @@ const appRouter = trpc
 //     }),
 //   }),
 //   async resolve({ ctx, input }) {
+//     // When adding something to history append it to the start of the array so the last changes are at the beginning
 //     if (Object.keys(input.modifications).length > 0) {
 //       await itemModel.updateOne(
 //         {
-//           _id: input.itemID,
+//           _id: input.itemID,asd
 //         },
 //         {
 //           name: input.modifications.name,
