@@ -12,12 +12,15 @@ const props = defineProps<{
   id: string;
 }>();
 
-const emit = defineEmits(["openWindow"]);
+const emit = defineEmits(["openItemInfoWindow", "openEditItemWindow"]);
 
-const openItemInfoWindow = () => {
-  emit("openWindow", props.id);
+const openEditItemWindow = () => {
+  emit("openEditItemWindow", props.id);
 };
 
+const openItemInfoWindow = () => {
+  emit("openItemInfoWindow", props.id);
+};
 </script>
 
 <template>
@@ -33,7 +36,7 @@ const openItemInfoWindow = () => {
 
     <span class="right-container">
       <button class="action-button" @click="openItemInfoWindow">Vedi dettagli</button>
-      <button class="edit-icon" @click="() => dialog.open(EditItemDialog, {})">
+      <button class="edit-icon" @click="openEditItemWindow">
         <img :src="editIcon" alt="" />
       </button>
     </span>

@@ -1,9 +1,11 @@
 <script setup lang="ts">
 import Header from "@/components/Header.vue";
 import SearchResult from "@/components/SearchResult.vue";
-import ItemInfo from "@/components/ItemInfo.vue";
+import ItemInfoDialog from "@/components/ItemInfoDialog.vue";
 import { reactive, watch } from "vue";
 import client from "@/utils/trpc";
+
+import EditItemDialog from "@/components/EditItemDialog.vue";
 
 import { useRoute } from "vue-router";
 import router from "@/router";
@@ -22,16 +24,26 @@ const state = reactive({
 
 const windowState = reactive({
   itemInfoWindowIsOpen: false,
+  editWindowIsOpen: false,
   itemID: null,
 });
 
-const onOpenWindow = id => {
+const onOpenItemInfoWindow = id => {
   windowState.itemInfoWindowIsOpen = true;
   windowState.itemID = id;
 };
 
-const onCloseWindow = id => {
+const onCloseItemInfoWindow = () => {
   windowState.itemInfoWindowIsOpen = false;
+};
+
+const onOpenEditItemWindow = id => {
+  windowState.editWindowIsOpen = true;
+  windowState.itemID = id;
+};
+
+const onCloseEditItemWindow = () => {
+  windowState.editWindowIsOpen = false;
 };
 
 (async () => {
@@ -63,7 +75,11 @@ const onFormSubmit = async () => {
 <template>
   <div>
     <Header />
-    <DynamicDialog />
+    <EditItemDialog
+      v-if="windowState.editWindowIsOpen"
+      @closeEditItemWindow="onCloseEditItemWindow"
+      :id="windowState.itemID"
+    />
 
     <main>
       <h1 class="welcome-title">Ricerca</h1>
@@ -108,27 +124,32 @@ const onFormSubmit = async () => {
               spellcheck="false"
             />
           </span>
-        </div>
 
-        <div class="tags-container">
-          <label for="item-name">Tags</label>
+          <div class="tags-container">
+            <label for="item-name">Tags</label>
 
-          <Chips v-model="state.tags" class="tags-field" separator="," />
-          <Button type="submit" label="Cerca" />
+            <Chips v-model="state.tags" class="tags-field" separator="," />
+            <Button class="tags-button" type="submit" label="Cerca" />
+          </div>
         </div>
       </form>
 
       <div class="results-container">
         <span v-for="result in state.searchResult" :key="result._id">
-          <SearchResult @openWindow="onOpenWindow" :itemName="result.name" :id="result._id" />
+          <SearchResult
+            @openItemInfoWindow="onOpenItemInfoWindow"
+            @openEditItemWindow="onOpenEditItemWindow"
+            :itemName="result.name"
+            :id="result._id"
+          />
         </span>
       </div>
     </main>
 
-    <ItemInfo
+    <ItemInfoDialog
       v-if="windowState.itemInfoWindowIsOpen"
       :itemID="windowState.itemID"
-      @closeWindow="onCloseWindow"
+      @closeItemInfoWindow="onCloseItemInfoWindow"
     />
   </div>
 </template>
@@ -162,6 +183,12 @@ const onFormSubmit = async () => {
 .tags-field {
   width: 100% !important;
 }
+
+.tags-button{
+  margin-top: 1rem;
+  margin-left: auto;
+}
+
 .tags-field > ul {
   width: 100% !important;
 }
@@ -174,5 +201,20 @@ main {
 label {
   color: var(--primevue-gray);
   margin-left: 4px;
+}
+
+@media screen and (min-width: 400px) and (max-width: 1300px) {
+  .input-container {
+    grid-template-columns: 1fr;
+  }
+
+  .tags-container {
+    display: grid;
+    grid-template-columns: 1fr;
+  }
+  .tags-field {
+    width: 100% !important;
+    display: grid;
+  }
 }
 </style>

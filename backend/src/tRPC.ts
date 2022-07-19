@@ -87,37 +87,33 @@ const appRouter = trpc
       // Resolve usernames in history
       return await itemModel.findById(input.itemID);
     },
+  })
+  .mutation("editItem", {
+    input: z.object({
+      itemID: z.string(),
+      edits: z.object({
+        name: z.string().optional(),
+        quantity: z.number().optional(),
+        position: z.string().optional(),
+        tags: z.string().array().optional(),
+        projectName: z.string().optional(),
+      }),
+    }),
+    async resolve({ ctx, input }) {
+      console.log(input);
+      // TODO: When adding something to history append it to the start of the array so the last changes are at the beginning
+      if (Object.keys(input.edits).length > 0) {
+        await itemModel.updateOne(
+          { _id: input.itemID },
+          {
+            name: input.edits.name,
+            quantity: input.edits.quantity,
+            position: input.edits.position,
+            project_name: input.edits.projectName,
+          }
+        );
+      }
+    },
   });
-// .mutation("editItem", {
-//   input: z.object({
-//     itemID: z.string(),
-//     modifications: z.object({
-//       name: z.string().optional(),
-//       quantity: z.number().optional(),
-//       position: z.string().optional(),
-//       tags: z.string().array().optional(),
-//       projectName: z.string().optional(),
-//     }),
-//   }),
-//   async resolve({ ctx, input }) {
-//     // When adding something to history append it to the start of the array so the last changes are at the beginning
-//     if (Object.keys(input.modifications).length > 0) {
-//       await itemModel.updateOne(
-//         {
-//           _id: input.itemID,asd
-//         },
-//         {
-//           name: input.modifications.name,
-//           quantity: input.modifications.quantity,
-//           position: input.modifications.position,
-//           projectName: input.modifications.projectName,
-//           history: {
-//             $push,
-//           },
-//         }
-//       );
-//     }
-//   },
-// });
 
 export default appRouter;

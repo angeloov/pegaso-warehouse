@@ -22,11 +22,12 @@ const state = reactive({
   tags: [],
 });
 
-const emit = defineEmits(["closeWindow"]);
-const closeItemInfoWindow = () => emit("closeWindow");
+const emit = defineEmits(["closeItemInfoWindow"]);
+const closeItemInfoWindow = () => emit("closeItemInfoWindow");
 
 onMounted(async () => {
   const itemInfo = await client.query("getItemInfoByID", { itemID: props.itemID });
+  console.log(props.itemID);
 
   state.quantity = itemInfo.quantity;
   state.itemName = itemInfo.name;
@@ -134,6 +135,7 @@ main {
   left: 0;
   right: 0;
   bottom: 0;
+  z-index: 1;
 }
 
 .window {
@@ -141,7 +143,7 @@ main {
   padding: 1.5rem;
   display: flex;
 
-  margin: 8rem;
+  margin: 5%;
   border-radius: 2rem;
 }
 .item-icon {
@@ -194,5 +196,9 @@ h1 {
   display: flex;
   width: 100%;
   margin: 1.5rem 0;
+}
+
+@media screen and (min-width: 400px) and (max-width: 1300px) {
+
 }
 </style>
