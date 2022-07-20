@@ -53,6 +53,11 @@ const state = reactive({
   margin-left: auto;
 }
 
+.remove-items-container > .title {
+  text-align: center;
+  font-size: 1rem;
+}
+
 .count-btn {
   background: #e8e8e8;
   border: 0;
@@ -63,7 +68,7 @@ const state = reactive({
 }
 
 .count-btn:hover {
-  background: #dddddd
+  background: #dddddd;
 }
 
 .counter {
@@ -79,5 +84,26 @@ const state = reactive({
   display: flex;
   justify-content: center;
   margin-top: 1rem;
+}
+
+@media screen and (min-width: 400px) and (max-width: 1300px) {
+  .remove-items-container {
+    padding: 1.5rem;
+    border: 1px solid #d9d9d9;
+    border-radius: 1rem;
+    margin-left: 0;
+  }
+
+  .count-btn > img {
+    width: 2rem;
+  }
+
+  .counter {
+    font-size: 2rem;
+  }
+
+  .remove-items-container > .title {
+    font-size: 1.25rem;
+  }
 }
 </style>

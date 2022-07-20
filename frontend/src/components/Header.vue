@@ -2,7 +2,7 @@
 defineProps<{
   hideNav?: boolean;
 }>();
-
+import editIcon from "@/assets/icons/edit.svg";
 import logo from "@/assets/logo.svg";
 import { RouterLink } from "vue-router";
 import { useRoute } from "vue-router";
@@ -35,6 +35,12 @@ import { useRoute } from "vue-router";
         >QRCodes</RouterLink
       >
     </span>
+
+    <span>
+      <button>
+        <img :src="editIcon" alt="" class="menu-button" />
+      </button>
+    </span>
   </header>
 </template>
 
@@ -47,10 +53,14 @@ header {
   margin: 2rem 3rem;
 }
 
+.menu-button {
+  display: none;
+}
+
 @media screen and (max-width: 580px) {
   .pegasow-logo {
     width: 180px;
-    margin: 2rem auto;
+    margin: 2rem;
   }
 
   .link-container {
@@ -89,5 +99,14 @@ header {
   margin-left: auto;
   margin-right: 3rem;
   gap: 1rem;
+}
+
+.menu-button {
+  display: flex;
+  padding: 0.5rem;
+  background-color: red;
+  border-radius: 2rem;
+  cursor: pointer;
+  border-color: blue;
 }
 </style>

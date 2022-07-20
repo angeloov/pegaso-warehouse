@@ -53,11 +53,13 @@ const onFormSubmit = async () => {
   await client.mutation("editItem", {
     itemID: props.id,
     edits: {
-      name: newItemInfo.name,
-      quantity: parseInt(newItemInfo.quantity),
-      position: newItemInfo.position,
-      tags: newItemInfo.tags,
-      projectName: newItemInfo.projectName,
+      name: newItemInfo.name != oldItemInfo.name ? newItemInfo.name : null,
+      quantity:
+        newItemInfo.quantity != oldItemInfo.quantity ? parseInt(newItemInfo.quantity) : null,
+      position: newItemInfo.position != oldItemInfo.position ? newItemInfo.position : null,
+      tags: newItemInfo.tags.toString() !== oldItemInfo.tags.toString() ? newItemInfo.tags : null,
+      projectName:
+        newItemInfo.projectName != oldItemInfo.projectName ? newItemInfo.projectName : null,
     },
   });
 };
@@ -67,7 +69,7 @@ const onFormSubmit = async () => {
   <div class="dialog">
     <div class="window">
       <div class="close-container">
-        <p>{{ props.id }}</p>
+        <h2 class="title">Modifica</h2>
         <button class="close-button" @click="onCloseEditItemWindow">
           <img :src="addIcon" alt="" />
         </button>
@@ -124,6 +126,9 @@ const onFormSubmit = async () => {
   place-items: center;
 }
 
+.title {
+  margin-top: 0;
+}
 .window {
   background: #f5f9f6;
   display: inline-block;
@@ -136,9 +141,8 @@ const onFormSubmit = async () => {
 
 .close-button {
   border: 0;
-  margin: 0;
-  margin-bottom: auto;
-  margin-left: auto;
+  margin: auto;
+  margin-right: 0;
 
   padding: 0;
   line-height: normal;
@@ -148,8 +152,6 @@ const onFormSubmit = async () => {
   position: relative;
   width: 2.5rem;
   height: 2.5rem;
-
-  margin-left: auto;
 }
 
 .close-button > img {

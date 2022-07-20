@@ -95,4 +95,10 @@ const openItemInfoWindow = () => {
 .item-desc {
   color: #4a4a4a;
 }
+.edit-icon {
+  padding: 0.5rem;
+  border: 0;
+  border-radius: 2rem;
+  cursor: pointer;
+}
 </style>

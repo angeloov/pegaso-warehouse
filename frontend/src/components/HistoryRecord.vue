@@ -9,7 +9,7 @@ console.log(props.snapshot);
 <template>
   <div class="history-record">
     <span class="history-info">
-      <p class="name">{{ props.snapshot.user_id }}</p>
+      <p class="name">{{ props.snapshot.firstname }}</p>
       <p class="date">{{ new Date(props.snapshot.date).toLocaleString() }}</p>
     </span>
 
@@ -17,7 +17,8 @@ console.log(props.snapshot);
       <p v-if="!props.snapshot.edits">Ha creato il componente</p>
       <span v-else class="edits-container">
         <p v-for="edit in props.snapshot.edits" :v-key="edit.key">
-          {{ edit.key }} => {{ edit.value }}
+          {{ edit.key }} => <span style="text-decoration: line-through">{{ edit.from }}</span>
+          {{ edit.to }}
         </p>
       </span>
     </span>
@@ -64,5 +65,23 @@ console.log(props.snapshot);
 .history-changes > * {
   margin-top: 1rem;
   margin-bottom: 0;
+}
+
+@media screen and (min-width: 350px) and (max-width: 600px) {
+  .history-info {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+
+  }
+
+  .history-info > .name {
+    margin-bottom: .5rem;
+    margin-right: .5rem;
+  }
+
+  .history-info > .date {
+    margin-left: 0;
+  }
 }
 </style>

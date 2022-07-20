@@ -24,7 +24,7 @@ app.use(
   })
 );
 
-// tRPC config
+// tRPC config√
 import appRouter from "./tRPC";
 
 // created for each request
@@ -97,7 +97,11 @@ app.post("/protected", passport.authenticate("jwt", { session: false }), async (
 });
 
 app.post("/register", async (req, res) => {
-  const userDoc = new User({ username: "angelo", password: "ciao", firstname: "Angelo" });
+  const userDoc = new User({
+    username: req.body.username,
+    password: req.body.password,
+    firstname: req.body.firstname,
+  });
   await userDoc.save();
 
   res.end();

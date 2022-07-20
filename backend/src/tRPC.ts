@@ -7,6 +7,7 @@ import type { Context } from "./index";
 import jwt from "jsonwebtoken";
 
 import itemModel from "./mongoose/Item";
+import userModel from "./mongoose/User";
 import computeNextId from "./utils/computeNextId";
 
 const appRouter = trpc
@@ -85,33 +86,50 @@ const appRouter = trpc
     }),
     async resolve({ input }) {
       // Resolve usernames in history
-      return await itemModel.findById(input.itemID);
+      const query = await itemModel.findById(input.itemID);
+
+      for (let obj of query.history) {
+        obj.firstname = (await userModel.findById(obj.user_id)).firstname;
+      }
+
+      return query;
     },
   })
   .mutation("editItem", {
     input: z.object({
       itemID: z.string(),
       edits: z.object({
-        name: z.string().optional(),
-        quantity: z.number().optional(),
-        position: z.string().optional(),
-        tags: z.string().array().optional(),
-        projectName: z.string().optional(),
+        name: z.string().optional().nullable(),
+        quantity: z.number().optional().nullable(),
+        position: z.string().optional().nullable(),
+        tags: z.string().array().optional().nullable(),
+        projectName: z.string().optional().nullable(),
       }),
     }),
     async resolve({ ctx, input }) {
-      console.log(input);
+      const { id: userID } = jwt.verify(ctx.jwt, process.env.ACCESS_TOKEN_SECRET as jwt.Secret);
+      const item = await itemModel.findById(input.itemID);
+
       // TODO: When adding something to history append it to the start of the array so the last changes are at the beginning
       if (Object.keys(input.edits).length > 0) {
-        await itemModel.updateOne(
-          { _id: input.itemID },
-          {
-            name: input.edits.name,
-            quantity: input.edits.quantity,
-            position: input.edits.position,
-            project_name: input.edits.projectName,
+        const itemEdits = {
+          name: input.edits.name ?? undefined,
+          quantity: input.edits.quantity ?? undefined,
+          position: input.edits.position ?? undefined,
+          project_name: input.edits.projectName ?? undefined,
+          $push: {
+            history: { $each: [{ user_id: userID, date: new Date(), edits: [] }], $position: 0 },
+          },
+        };
+
+        let modifications = itemEdits["$push"]["history"]["$each"][0]["edits"];
+        for (let [key, value]: [string, any] of Object.entries(itemEdits)) {
+          if (value && key != "$push") {
+            modifications.push({ key: key, from: item[key], to: value });
           }
-        );
+        }
+
+        await itemModel.updateOne({ _id: input.itemID }, itemEdits);
       }
     },
   });

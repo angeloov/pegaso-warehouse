@@ -69,7 +69,6 @@ const onFormSubmit = async () => {
   });
 };
 
-// onFormSubmit();
 </script>
 
 <template>
@@ -182,6 +181,7 @@ const onFormSubmit = async () => {
 
 .tags-field {
   width: 100% !important;
+  display: grid;
 }
 
 .tags-button{
@@ -212,9 +212,6 @@ label {
     display: grid;
     grid-template-columns: 1fr;
   }
-  .tags-field {
-    width: 100% !important;
-    display: grid;
-  }
+ 
 }
 </style>
