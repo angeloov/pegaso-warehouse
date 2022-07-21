@@ -1,11 +1,25 @@
 <script setup lang="ts">
+const props = defineProps<{
+  itemID: string;
+  currentQuantity: number;
+}>();
+
 import { reactive } from "vue";
 import addIcon from "@/assets/icons/add.svg";
 import minusIcon from "@/assets/icons/minus.svg";
+import client from "@/utils/trpc";
 
 const state = reactive({
   itemsToRemove: 0,
 });
+
+const updateQuantity = async () => {
+  await client.mutation("removeItems", {
+    itemID: props.itemID,
+    prevQuantity: props.currentQuantity,
+    itemsToRemove: state.itemsToRemove,
+  });
+};
 </script>
 
 <template>
@@ -30,7 +44,7 @@ const state = reactive({
     </div>
 
     <div class="button-container">
-      <Button label="Rimuovi" />
+      <Button label="Rimuovi" @click="updateQuantity" />
     </div>
   </div>
 </template>

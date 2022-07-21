@@ -2,10 +2,12 @@
 defineProps<{
   hideNav?: boolean;
 }>();
-import editIcon from "@/assets/icons/edit.svg";
 import logo from "@/assets/logo.svg";
+import HamburgerMenu from "@/components/HamburgerMenu.vue"
 import { RouterLink } from "vue-router";
 import { useRoute } from "vue-router";
+
+
 </script>
 
 <template>
@@ -36,11 +38,7 @@ import { useRoute } from "vue-router";
       >
     </span>
 
-    <span>
-      <button>
-        <img :src="editIcon" alt="" class="menu-button" />
-      </button>
-    </span>
+    <HamburgerMenu />
   </header>
 </template>
 
@@ -53,21 +51,6 @@ header {
   margin: 2rem 3rem;
 }
 
-.menu-button {
-  display: none;
-}
-
-@media screen and (max-width: 580px) {
-  .pegasow-logo {
-    width: 180px;
-    margin: 2rem;
-  }
-
-  .link-container {
-    display: none !important;
-    background: blueviolet;
-  }
-}
 
 .header-link:hover {
   color: var(--primary-color);
@@ -101,12 +84,16 @@ header {
   gap: 1rem;
 }
 
-.menu-button {
-  display: flex;
-  padding: 0.5rem;
-  background-color: red;
-  border-radius: 2rem;
-  cursor: pointer;
-  border-color: blue;
+@media screen and (min-width: 350px) and (max-width: 600px) {
+  .pegasow-logo {
+    width: 180px;
+    margin: 2rem;
+  }
+
+  .link-container {
+    display: none !important;
+    background: blueviolet;
+  }
+
 }
 </style>

@@ -6,6 +6,9 @@ import mongoose from "mongoose";
 import jwt from "jsonwebtoken";
 import * as utils from "./jwt/utils";
 import cors from "cors";
+import fs from "fs";
+
+import https from "https";
 
 import type { UserType } from "./mongoose/User";
 import { TRPCError } from "@trpc/server";
@@ -24,7 +27,7 @@ app.use(
   })
 );
 
-// tRPC config√
+// tRPC config
 import appRouter from "./tRPC";
 
 // created for each request
@@ -113,6 +116,19 @@ app.use((err: any, req: any, res: any, next: any) => {
 });
 
 app.listen(4000, () => console.log("Listening on port 4000"));
+// console.log(path.resolve(__dirname, "..", "src", "private_key.pem"));
+
+// https
+//   .createServer(
+//     {
+//       key: fs.readFileSync(path.resolve(__dirname, "..", "src", "private_key.pem")),
+//       cert: fs.readFileSync(path.resolve(__dirname, "..", "src", "server.pem")),
+//     },
+//     app
+//   )
+//   .listen(4000, () => {
+//     console.log("Listening on port 4000");
+//   });
 
 // export type definition of API
 export type AppRouter = typeof appRouter;

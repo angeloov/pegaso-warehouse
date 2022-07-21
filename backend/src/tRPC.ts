@@ -9,6 +9,14 @@ import jwt from "jsonwebtoken";
 import itemModel from "./mongoose/Item";
 import userModel from "./mongoose/User";
 import computeNextId from "./utils/computeNextId";
+import { computeNextPegId } from "./utils/computeNextId";
+
+import { generate } from "@pdfme/generator";
+import pdfTemplate from "./pdf/config";
+import * as fs from "fs";
+import path from "path";
+
+import type { UserType } from "./mongoose/User";
 
 const appRouter = trpc
   .router<Context>()
@@ -52,6 +60,7 @@ const appRouter = trpc
         position: input.position,
         tags: input.tags,
         project_name: input.projectName,
+        wasAlreadyPrinted: false,
         history: [
           {
             user_id: userID,
@@ -68,16 +77,19 @@ const appRouter = trpc
       itemName: z.string(),
       projectName: z.string(),
       position: z.string(),
-      // tags: z.string().array(),
+      tags: z.string().array(),
     }),
     async resolve({ input, ctx }) {
-      const query = await itemModel.find({
+      const queryCriteria = {
         name: { $regex: ".*" + input.itemName + ".*" },
         project_name: { $regex: ".*" + input.projectName + ".*" },
         position: { $regex: ".*" + input.position + ".*" },
-      });
+        // tags: input.tags.length > 0 ? { $in: input.tags } : undefined,
+      };
 
-      return query;
+      if (input.tags.length > 0) queryCriteria.tags = { $in: input.tags };
+
+      return await itemModel.find(queryCriteria);
     },
   })
   .query("getItemInfoByID", {
@@ -87,9 +99,14 @@ const appRouter = trpc
     async resolve({ input }) {
       // Resolve usernames in history
       const query = await itemModel.findById(input.itemID);
+      // console.log(query);
 
       for (let obj of query.history) {
-        obj.firstname = (await userModel.findById(obj.user_id)).firstname;
+        const user = await userModel.findById(obj.user_id);
+        if (!user)
+          console.error(`There was an error, the user with user_id ${obj.user_id} doesn't exist`);
+
+        obj.firstname = user.firstname;
       }
 
       return query;
@@ -109,6 +126,8 @@ const appRouter = trpc
     async resolve({ ctx, input }) {
       const { id: userID } = jwt.verify(ctx.jwt, process.env.ACCESS_TOKEN_SECRET as jwt.Secret);
       const item = await itemModel.findById(input.itemID);
+
+      console.log(input);
 
       // TODO: When adding something to history append it to the start of the array so the last changes are at the beginning
       if (Object.keys(input.edits).length > 0) {
@@ -131,6 +150,81 @@ const appRouter = trpc
 
         await itemModel.updateOne({ _id: input.itemID }, itemEdits);
       }
+    },
+  })
+  .mutation("removeItems", {
+    input: z.object({
+      itemID: z.string(),
+      prevQuantity: z.number(),
+      itemsToRemove: z.number(),
+    }),
+    async resolve({ input, ctx }) {
+      const { id: userID } = jwt.verify(ctx.jwt, process.env.ACCESS_TOKEN_SECRET as jwt.Secret);
+
+      const itemEdits = {
+        quantity: input.prevQuantity - input.itemsToRemove,
+        $push: {
+          history: {
+            $each: [
+              {
+                user_id: userID,
+                date: new Date(),
+                edits: [
+                  {
+                    key: "quantity",
+                    from: input.prevQuantity,
+                    to: input.prevQuantity - input.itemsToRemove,
+                  },
+                ],
+              },
+            ],
+            $position: 0,
+          },
+        },
+      };
+
+      await itemModel.updateOne({ _id: input.itemID }, itemEdits);
+    },
+  })
+  .query("generatePDF", {
+    input: z.object({
+      itemIDs: z.string().array(),
+    }),
+    async resolve({ input }) {
+      // {
+      //   ID1: "AA000",
+      //   ID2: "AA001",
+      //   ID3: "AA002",
+      //   ID4: "AA003",
+      //   ID5: "AA004",
+      //   ID6: "AA005",
+      //   QR1: "AA000",
+      //   QR2: "AA001",
+      //   QR3: "AA002",
+      //   QR4: "AA003",
+      //   QR5: "AA004",
+      //   QR6: "AA005",
+      // },
+
+      const inputs = [{}];
+      for (let i = 1; i <= input.itemIDs.length; i++) {
+        inputs[0][`ID${i}`] = input.itemIDs[i - 1];
+        inputs[0][`QR${i}`] = input.itemIDs[i - 1];
+      }
+
+      let template = pdfTemplate;
+      generate({ template, inputs }).then(pdf => {
+        console.log(pdf);
+        fs.writeFileSync(path.resolve(__dirname, "..", "src", "pdf", `test.pdf`), pdf);
+      });
+    },
+  })
+  .query("getNextPegID", {
+    async resolve() {
+      const res = await itemModel.find({ name: { $regex: "PEG.*" } });
+      const lastPegItem = res[res.length - 1];
+
+      return `Il prossimo ID disponibile è ${computeNextPegId(lastPegItem["name"])}`;
     },
   });
 

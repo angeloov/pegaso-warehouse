@@ -52,8 +52,10 @@ const onCloseEditItemWindow = () => {
       itemName: state.itemName.trim(),
       projectName: state.projectName.trim(),
       position: state.position.trim(),
-      // tags: [],
+      tags: state.tags,
     });
+
+    console.log(state.searchResult);
   }
 })();
 
@@ -68,7 +70,6 @@ const onFormSubmit = async () => {
     },
   });
 };
-
 </script>
 
 <template>
@@ -184,7 +185,7 @@ const onFormSubmit = async () => {
   display: grid;
 }
 
-.tags-button{
+.tags-button {
   margin-top: 1rem;
   margin-left: auto;
 }
@@ -212,6 +213,5 @@ label {
     display: grid;
     grid-template-columns: 1fr;
   }
- 
 }
 </style>

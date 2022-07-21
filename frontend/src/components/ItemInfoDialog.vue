@@ -66,7 +66,7 @@ onMounted(async () => {
             <p>Tags: {{ state.tags.join(", ") }}</p>
           </div>
 
-          <RemoveItems />
+          <RemoveItems :itemID="props.itemID" :currentQuantity="state.quantity" />
         </div>
 
         <div class="bottom-part">
