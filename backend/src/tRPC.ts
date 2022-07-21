@@ -16,6 +16,8 @@ import pdfTemplate from "./pdf/config";
 import * as fs from "fs";
 import path from "path";
 
+import crypto from "crypto";
+
 import type { UserType } from "./mongoose/User";
 
 const appRouter = trpc
@@ -81,10 +83,9 @@ const appRouter = trpc
     }),
     async resolve({ input, ctx }) {
       const queryCriteria = {
-        name: { $regex: ".*" + input.itemName + ".*" },
-        project_name: { $regex: ".*" + input.projectName + ".*" },
-        position: { $regex: ".*" + input.position + ".*" },
-        // tags: input.tags.length > 0 ? { $in: input.tags } : undefined,
+        name: { $regex: ".*" + input.itemName + ".*", $options: "i" },
+        project_name: { $regex: ".*" + input.projectName + ".*", $options: "i" },
+        position: { $regex: ".*" + input.position + ".*", $options: "i" },
       };
 
       if (input.tags.length > 0) queryCriteria.tags = { $in: input.tags };
@@ -206,17 +207,31 @@ const appRouter = trpc
       //   QR6: "AA005",
       // },
 
+      await itemModel.updateMany(
+        {
+          _id: {
+            $in: input.itemIDs,
+          },
+        },
+        {
+          $set: { wasAlreadyPrinted: true },
+        }
+      );
+
       const inputs = [{}];
       for (let i = 1; i <= input.itemIDs.length; i++) {
         inputs[0][`ID${i}`] = input.itemIDs[i - 1];
         inputs[0][`QR${i}`] = input.itemIDs[i - 1];
       }
 
-      let template = pdfTemplate;
-      generate({ template, inputs }).then(pdf => {
-        console.log(pdf);
-        fs.writeFileSync(path.resolve(__dirname, "..", "src", "pdf", `test.pdf`), pdf);
-      });
+      const hash = crypto.randomBytes(32).toString("hex");
+      const template = pdfTemplate;
+
+      const pdf = await generate({ template, inputs });
+      fs.writeFileSync(path.resolve(__dirname, "..", "src", "pdf", "static", `${hash}.pdf`), pdf);
+
+      // TODO: change url here
+      return `http://localhost:4000/pdf/${hash}.pdf`;
     },
   })
   .query("getNextPegID", {
@@ -225,6 +240,14 @@ const appRouter = trpc
       const lastPegItem = res[res.length - 1];
 
       return `Il prossimo ID disponibile è ${computeNextPegId(lastPegItem["name"])}`;
+    },
+  })
+  .query("getItemsToBePrinted", {
+    input: z.object({
+      wasAlreadyPrinted: z.boolean(),
+    }),
+    async resolve({ input }) {
+      return await itemModel.find({ wasAlreadyPrinted: input.wasAlreadyPrinted });
     },
   });
 

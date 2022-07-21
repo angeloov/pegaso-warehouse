@@ -1,5 +1,5 @@
 function increment(char: string) {
-  if (char.length == 1) {
+  if (char.length === 1) {
     return String.fromCharCode(char.charCodeAt(0) + 1);
   } else {
     throw new Error("Incorrect input parameter given in function");

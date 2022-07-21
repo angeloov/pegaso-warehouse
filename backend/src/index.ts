@@ -27,6 +27,8 @@ app.use(
   })
 );
 
+app.use("/pdf", express.static(path.resolve(__dirname, "..", "src", "pdf", "static")));
+
 // tRPC config
 import appRouter from "./tRPC";
 
