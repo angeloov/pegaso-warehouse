@@ -38,7 +38,7 @@ const router = createRouter({
       component: AddItemView,
     },
     {
-      path: "/404",
+      path: "/:pathMatch(.*)*",
       name: "404",
       component: NotFoundView,
     },

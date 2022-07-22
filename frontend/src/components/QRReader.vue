@@ -10,48 +10,41 @@ const props = defineProps<{
 }>();
 
 const videoRef = ref(null);
-const camQrResult = ref(null);
+let scanner;
 
 onMounted(() => {
-  console.log(videoRef.value);
-
-  function setResult(label, result) {
-    console.log(result.data);
-    label.textContent = result.data;
-  }
-
-  const scanner = new QrScanner(
-    videoRef.value,
-    function (result) {
-      setResult(camQrResult.value, result);
-      if (result != "Scanner error: No QR code found") {
-        console.log(result.data);
-        emit("scannedQRCode", result.data);
-        scanner.stop();
-      }
-    },
-    {
-      onDecodeError: error => {
-        if (camQrResult.value) {
-          camQrResult.value.textContent = error;
+  if (props.isShown) {
+    scanner = new QrScanner(
+      videoRef.value,
+      function (result: any) {
+        if (result != "Scanner error: No QR code found") {
+          emit("scannedQRCode", result.data);
+          scanner.stop();
         }
       },
-      highlightScanRegion: true,
-      highlightCodeOutline: true,
-    }
-  );
+      {
+        maxScansPerSecond: 5,
+        highlightScanRegion: true,
+        highlightCodeOutline: true,
+      }
+    );
 
-  scanner.start();
+    scanner.start();
+  }
 });
+
+const closeQRReader = () => {
+  emit("closeQRReader");
+  scanner.destroy();
+};
 </script>
 
 <template>
   <div class="container" :class="{ shown: props.isShown }">
-    <button class="close-btn" @click="() => emit('closeQRReader')">
+    <button class="close-btn" @click="closeQRReader">
       <img :src="addIcon" alt="" class="close-btn-img" />
     </button>
     <video src="" ref="videoRef" class="camera"></video>
-    <p id="output" ref="camQrResult">QRReader</p>
   </div>
 </template>
 

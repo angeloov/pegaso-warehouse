@@ -13,7 +13,6 @@ import https from "https";
 import type { UserType } from "./mongoose/User";
 import { TRPCError } from "@trpc/server";
 
-// TODO: Fix this
 import path from "path";
 require("dotenv").config({ path: path.resolve(__dirname, "../.env") });
 
@@ -123,13 +122,13 @@ app.listen(4000, () => console.log("Listening on port 4000"));
 // https
 //   .createServer(
 //     {
-//       key: fs.readFileSync(path.resolve(__dirname, "..", "src", "private_key.pem")),
-//       cert: fs.readFileSync(path.resolve(__dirname, "..", "src", "server.pem")),
+//       key: fs.readFileSync(path.resolve(__dirname, "..", '90.0.0.19-key.pem')),
+//       cert: fs.readFileSync(path.resolve(__dirname, "..", '90.0.0.19.pem')),
 //     },
 //     app
 //   )
 //   .listen(4000, () => {
-//     console.log("Listening on port 4000");
+//     console.log(`Listening on port 4000. https://${process.env.BACKEND_URI}:4000`);
 //   });
 
 // export type definition of API

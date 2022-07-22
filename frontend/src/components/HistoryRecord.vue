@@ -1,6 +1,10 @@
 <script setup lang="ts">
 const props = defineProps<{
-  snapshot: Object; // TODO: Create an interface
+  snapshot: {
+    firstname: string;
+    date: Date;
+    edits: any;
+  };
 }>();
 
 console.log(props.snapshot);
@@ -72,12 +76,11 @@ console.log(props.snapshot);
     display: flex;
     flex-wrap: wrap;
     align-items: center;
-
   }
 
   .history-info > .name {
-    margin-bottom: .5rem;
-    margin-right: .5rem;
+    margin-bottom: 0.5rem;
+    margin-right: 0.5rem;
   }
 
   .history-info > .date {

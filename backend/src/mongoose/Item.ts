@@ -13,6 +13,8 @@ interface ItemType {
   part_number?: string;
 }
 
+
+
 const itemSchema = new Schema<ItemType>({
   _id: String,
   name: { type: String, required: true },
@@ -29,3 +31,4 @@ const itemSchema = new Schema<ItemType>({
 const itemModel = model<ItemType>("items", itemSchema);
 
 export default itemModel;
+export type { ItemType, JWTPayload };

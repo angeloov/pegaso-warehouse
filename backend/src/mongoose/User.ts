@@ -7,6 +7,11 @@ export type UserType = {
   password: string;
 };
 
+export type JWTPayload = {
+  id: string;
+  iat: number;
+}
+
 const userSchema = new Schema<UserType>({
   firstname: String,
   username: String,

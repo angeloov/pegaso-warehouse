@@ -4,6 +4,8 @@ import addComponentIcon from "@/assets/icons/add-item.svg";
 import scanIcon from "@/assets/icons/scan.svg";
 import ViewTag from "@/components/ViewTag.vue";
 import QRReader from "@/components/QRReader.vue";
+import PegasoID from "@/components/PegasoID.vue";
+
 import { reactive } from "vue";
 
 const state = reactive({
@@ -39,6 +41,7 @@ const onCloseItemInfoWindow = () => {
   <div>
     <QRReader
       :isShown="state.qrReaderIsShown"
+      :key="state.qrReaderIsShown"
       @closeQRReader="() => (state.qrReaderIsShown = false)"
       @scannedQRCode="onScannedQRCode"
     />
@@ -62,6 +65,10 @@ const onCloseItemInfoWindow = () => {
           <img alt="logo" :src="scanIcon" class="primary-btn-icon" />
           <span class="ml-3 font-bold text-xl">Scannerizza QRCode</span>
         </Button>
+      </div>
+
+      <div>
+        <PegasoID />
       </div>
 
       <div class="objects-container">
@@ -101,7 +108,7 @@ main {
   display: flex;
   gap: 1rem;
   margin-top: 1rem;
-  margin-bottom: 4rem;
+  margin-bottom: 2rem;
 }
 
 .objects-container > span {

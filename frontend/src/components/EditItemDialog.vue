@@ -12,6 +12,9 @@ const onCloseEditItemWindow = () => {
   emit("closeEditItemWindow");
 };
 
+import { useToast } from "primevue/usetoast";
+const toast = useToast();
+
 const oldItemInfo = reactive({
   name: "",
   quantity: "",
@@ -49,25 +52,51 @@ const newItemInfo = reactive({
   newItemInfo.projectName = res.project_name;
 })();
 
-const onFormSubmit = async () => {
-  await client.mutation("editItem", {
-    itemID: props.id,
-    edits: {
-      name: newItemInfo.name != oldItemInfo.name ? newItemInfo.name : null,
-      quantity:
-        newItemInfo.quantity != oldItemInfo.quantity ? parseInt(newItemInfo.quantity) : null,
-      position: newItemInfo.position != oldItemInfo.position ? newItemInfo.position : null,
-      tags: newItemInfo.tags.toString() !== oldItemInfo.tags.toString() ? newItemInfo.tags : null,
-      projectName:
-        newItemInfo.projectName != oldItemInfo.projectName ? newItemInfo.projectName : null,
-    },
+const showSuccess = () => {
+  toast.add({
+    severity: "success",
+    summary: "Successo",
+    detail: "Oggetto modificato con successo",
+    life: 3000,
   });
+};
+
+const showError = (err: string) => {
+  toast.add({
+    severity: "error",
+    summary: "Errore",
+    detail: err,
+    life: 3000,
+  });
+};
+
+const onFormSubmit = async () => {
+  try {
+    await client.mutation("editItem", {
+      itemID: props.id,
+      edits: {
+        name: newItemInfo.name != oldItemInfo.name ? newItemInfo.name : null,
+        quantity:
+          newItemInfo.quantity != oldItemInfo.quantity ? parseInt(newItemInfo.quantity) : null,
+        position: newItemInfo.position != oldItemInfo.position ? newItemInfo.position : null,
+        tags: newItemInfo.tags.toString() !== oldItemInfo.tags.toString() ? newItemInfo.tags : null,
+        projectName:
+          newItemInfo.projectName != oldItemInfo.projectName ? newItemInfo.projectName : null,
+      },
+    });
+
+    showSuccess();
+  } catch (err: Error) {
+    showError(err.message);
+  }
 };
 </script>
 
 <template>
   <div class="dialog">
     <div class="window">
+      <Toast />
+
       <div class="close-container">
         <h2 class="title">Modifica</h2>
         <button class="close-button" @click="onCloseEditItemWindow">

@@ -2,12 +2,11 @@
 defineProps<{
   hideNav?: boolean;
 }>();
+
 import logo from "@/assets/logo.svg";
-import HamburgerMenu from "@/components/HamburgerMenu.vue"
+import HamburgerMenu from "@/components/HamburgerMenu.vue";
 import { RouterLink } from "vue-router";
 import { useRoute } from "vue-router";
-
-
 </script>
 
 <template>
@@ -23,11 +22,11 @@ import { useRoute } from "vue-router";
         >Home</RouterLink
       >
       <RouterLink
-        title="Search"
+        title="Ricerca"
         class="header-link"
         :class="{ 'is-blue': useRoute().name === 'search' }"
         to="/search"
-        >Search</RouterLink
+        >Ricerca</RouterLink
       >
       <RouterLink
         title="QRCodes"
@@ -51,7 +50,6 @@ header {
   margin: 2rem 3rem;
 }
 
-
 .header-link:hover {
   color: var(--primary-color);
   font-weight: 500;
@@ -60,6 +58,7 @@ header {
 .header-link {
   text-decoration: none;
   font-size: 1rem;
+  font-weight: 400;
   color: var(--light-gray);
 }
 
@@ -94,6 +93,5 @@ header {
     display: none !important;
     background: blueviolet;
   }
-
 }
 </style>

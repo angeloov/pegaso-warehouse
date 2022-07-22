@@ -5,6 +5,9 @@ import * as utils from "./jwt/utils";
 import type { Context } from "./index";
 
 import jwt from "jsonwebtoken";
+import { Secret } from "jsonwebtoken";
+
+import type { UserType, JWTPayload } from "./mongoose/User";
 
 import itemModel from "./mongoose/Item";
 import userModel from "./mongoose/User";
@@ -17,8 +20,6 @@ import * as fs from "fs";
 import path from "path";
 
 import crypto from "crypto";
-
-import type { UserType } from "./mongoose/User";
 
 const appRouter = trpc
   .router<Context>()
@@ -40,9 +41,9 @@ const appRouter = trpc
     input: z.object({
       name: z.string(),
       quantity: z.number().min(0).max(100),
-      position: z.string(),
-      projectName: z.string(),
-      tags: z.string().array(),
+      position: z.string().optional(),
+      projectName: z.string().optional(),
+      tags: z.string().array().optional(),
       website: z.string().optional(),
       partNumber: z.string().optional(),
     }),
@@ -53,7 +54,10 @@ const appRouter = trpc
         lastID = (await itemModel.find().skip(count - 1))[0]["_id"];
       }
 
-      const { id: userID } = jwt.verify(ctx.jwt, process.env.ACCESS_TOKEN_SECRET);
+      const { id: userID } = jwt.verify(
+        ctx.jwt,
+        process.env.ACCESS_TOKEN_SECRET as Secret
+      ) as JWTPayload;
 
       await itemModel.create({
         _id: count > 0 ? computeNextId(lastID) : "AA000",
@@ -100,7 +104,8 @@ const appRouter = trpc
     async resolve({ input }) {
       // Resolve usernames in history
       const query = await itemModel.findById(input.itemID);
-      // console.log(query);
+      
+      if (!query) throw new TRPCError("The itemID that was provided can't be found");
 
       for (let obj of query.history) {
         const user = await userModel.findById(obj.user_id);
@@ -130,7 +135,7 @@ const appRouter = trpc
 
       console.log(input);
 
-      // TODO: When adding something to history append it to the start of the array so the last changes are at the beginning
+      // When adding something to history append it to the start of the array so the last changes are at the beginning
       if (Object.keys(input.edits).length > 0) {
         const itemEdits = {
           name: input.edits.name ?? undefined,
@@ -160,7 +165,10 @@ const appRouter = trpc
       itemsToRemove: z.number(),
     }),
     async resolve({ input, ctx }) {
-      const { id: userID } = jwt.verify(ctx.jwt, process.env.ACCESS_TOKEN_SECRET as jwt.Secret);
+      const { id: userID } = jwt.verify(
+        ctx.jwt,
+        process.env.ACCESS_TOKEN_SECRET as jwt.Secret
+      ) as JWTPayload;
 
       const itemEdits = {
         quantity: input.prevQuantity - input.itemsToRemove,
@@ -192,30 +200,9 @@ const appRouter = trpc
       itemIDs: z.string().array(),
     }),
     async resolve({ input }) {
-      // {
-      //   ID1: "AA000",
-      //   ID2: "AA001",
-      //   ID3: "AA002",
-      //   ID4: "AA003",
-      //   ID5: "AA004",
-      //   ID6: "AA005",
-      //   QR1: "AA000",
-      //   QR2: "AA001",
-      //   QR3: "AA002",
-      //   QR4: "AA003",
-      //   QR5: "AA004",
-      //   QR6: "AA005",
-      // },
-
       await itemModel.updateMany(
-        {
-          _id: {
-            $in: input.itemIDs,
-          },
-        },
-        {
-          $set: { wasAlreadyPrinted: true },
-        }
+        { _id: { $in: input.itemIDs } },
+        { $set: { wasAlreadyPrinted: true } }
       );
 
       const inputs = [{}];
@@ -225,13 +212,11 @@ const appRouter = trpc
       }
 
       const hash = crypto.randomBytes(32).toString("hex");
-      const template = pdfTemplate;
 
-      const pdf = await generate({ template, inputs });
+      const pdf = await generate({ template: pdfTemplate, inputs });
       fs.writeFileSync(path.resolve(__dirname, "..", "src", "pdf", "static", `${hash}.pdf`), pdf);
 
-      // TODO: change url here
-      return `http://localhost:4000/pdf/${hash}.pdf`;
+      return `http://${process.env.BACKEND_URI}:4000/pdf/${hash}.pdf`;
     },
   })
   .query("getNextPegID", {
@@ -248,6 +233,18 @@ const appRouter = trpc
     }),
     async resolve({ input }) {
       return await itemModel.find({ wasAlreadyPrinted: input.wasAlreadyPrinted });
+    },
+  })
+  .query("getAllTags", {
+    async resolve() {
+      const tags = new Set();
+
+      const allItems = await itemModel.find({}, { tags: 1, _id: 0 });
+      allItems.forEach(item => {
+        item.tags.forEach(tag => tags.add(tag));
+      });
+
+      return Array.from(tags);
     },
   });
 

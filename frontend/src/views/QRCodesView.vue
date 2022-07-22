@@ -6,6 +6,9 @@ import SearchResult from "@/components/SearchResult.vue";
 import { reactive } from "vue";
 import client from "@/utils/trpc";
 
+import { useToast } from "primevue/usetoast";
+const toast = useToast();
+
 const state = reactive({
   itemsToPrint: [],
   itemsAlreadyPrinted: [],
@@ -22,16 +25,32 @@ const state = reactive({
 
   console.log(state);
 })();
+
+const printMultipleQRCodes = async () => {
+  toast.add({
+    severity: "info",
+    summary: "Info",
+    detail: "Generando il PDF...",
+    life: 3000,
+  });
+
+  const linkToPDF = await client.query("generatePDF", {
+    itemIDs: state.itemsToPrint.slice(0, 6).map(item => item._id),
+  });
+
+  window.open(linkToPDF, "_blank").focus();
+};
 </script>
 
 <template>
   <div>
     <Header />
+    <Toast />
 
     <main class="main">
       <span class="title-container">
         <h1>Ultimi articoli aggiunti al magazzino</h1>
-        <Button label="Stampa tutti i QRCode" class="printbtn" />
+        <Button label="Stampa tutti i QRCode" class="printbtn" @click="printMultipleQRCodes" />
       </span>
 
       <SearchResult
