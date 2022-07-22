@@ -5,6 +5,7 @@ import scanIcon from "@/assets/icons/scan.svg";
 import ViewTag from "@/components/ViewTag.vue";
 import QRReader from "@/components/QRReader.vue";
 import PegasoID from "@/components/PegasoID.vue";
+import client from "@/utils/trpc";
 
 import { reactive } from "vue";
 
@@ -12,6 +13,7 @@ const state = reactive({
   qrReaderIsShown: false,
   itemInfoDialogIsShown: false,
   itemID: null,
+  tags: [],
 });
 
 import router from "@/router";
@@ -35,6 +37,10 @@ const onCloseItemInfoWindow = () => {
   state.itemInfoDialogIsShown = false;
   state.itemID = null;
 };
+
+(async () => {
+  state.tags = await client.query("getAllTags");
+})();
 </script>
 
 <template>
@@ -75,9 +81,7 @@ const onCloseItemInfoWindow = () => {
         <h2>Oggetti in magazzino</h2>
 
         <span>
-          <ViewTag name="PC" />
-          <ViewTag name="Transistor" />
-          <ViewTag name="Oscilloscopio" />
+          <ViewTag v-for="tag in state.tags" :name="tag" />
         </span>
       </div>
     </main>

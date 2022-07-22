@@ -16,7 +16,7 @@ const showError = (err: string) => {
 };
 
 const onFormSubmit = async () => {
-  const res = await fetch("https://localhost:4000/login", {
+  const res = await fetch("http://localhost:4000/login", {
     method: "POST",
     credentials: "include",
     headers: {
