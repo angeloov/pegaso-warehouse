@@ -9,7 +9,7 @@ const state = reactive({ username: "", password: "" });
 const userData = useUserDataStore();
 
 const onFormSubmit = async () => {
-  const res = await fetch("http://localhost:4000/login", {
+  const res = await fetch(`${import.meta.env.BACKEND_URI}/login`, {
     method: "POST",
     credentials: "include",
     headers: {
@@ -86,12 +86,12 @@ const onFormSubmit = async () => {
   font-weight: 700;
   text-align: center;
   margin-bottom: 3rem;
-  color: #FAFAFA;
+  color: #fafafa;
 }
 
 .p-float-label {
   margin: 1.8rem 0;
-  color: #FAFAFA;
+  color: #fafafa;
 }
 
 .field * {
