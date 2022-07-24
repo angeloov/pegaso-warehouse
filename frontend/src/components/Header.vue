@@ -4,6 +4,7 @@ defineProps<{
 }>();
 
 import logo from "@/assets/logo.svg";
+import HamburgerMenu from "@/components/HamburgerMenu.vue";
 import { RouterLink } from "vue-router";
 import { useRoute } from "vue-router";
 </script>
@@ -21,11 +22,11 @@ import { useRoute } from "vue-router";
         >Home</RouterLink
       >
       <RouterLink
-        title="Search"
+        title="Ricerca"
         class="header-link"
         :class="{ 'is-blue': useRoute().name === 'search' }"
         to="/search"
-        >Search</RouterLink
+        >Ricerca</RouterLink
       >
       <RouterLink
         title="QRCodes"
@@ -35,6 +36,8 @@ import { useRoute } from "vue-router";
         >QRCodes</RouterLink
       >
     </span>
+
+    <HamburgerMenu />
   </header>
 </template>
 
@@ -47,18 +50,6 @@ header {
   margin: 2rem 3rem;
 }
 
-@media screen and (max-width: 580px) {
-  .pegasow-logo {
-    width: 180px;
-    margin: 2rem auto;
-  }
-
-  .link-container {
-    display: none !important;
-    background: blueviolet;
-  }
-}
-
 .header-link:hover {
   color: var(--primary-color);
   font-weight: 500;
@@ -67,6 +58,7 @@ header {
 .header-link {
   text-decoration: none;
   font-size: 1rem;
+  font-weight: 400;
   color: var(--light-gray);
 }
 
@@ -89,5 +81,17 @@ header {
   margin-left: auto;
   margin-right: 3rem;
   gap: 1rem;
+}
+
+@media screen and (min-width: 350px) and (max-width: 600px) {
+  .pegasow-logo {
+    width: 180px;
+    margin: 2rem;
+  }
+
+  .link-container {
+    display: none !important;
+    background: blueviolet;
+  }
 }
 </style>

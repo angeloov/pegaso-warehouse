@@ -22,11 +22,12 @@ const state = reactive({
   tags: [],
 });
 
-const emit = defineEmits(["closeWindow"]);
-const closeItemInfoWindow = () => emit("closeWindow");
+const emit = defineEmits(["closeItemInfoWindow"]);
+const closeItemInfoWindow = () => emit("closeItemInfoWindow");
 
 onMounted(async () => {
   const itemInfo = await client.query("getItemInfoByID", { itemID: props.itemID });
+  console.log(props.itemID);
 
   state.quantity = itemInfo.quantity;
   state.itemName = itemInfo.name;
@@ -65,7 +66,7 @@ onMounted(async () => {
             <p>Tags: {{ state.tags.join(", ") }}</p>
           </div>
 
-          <RemoveItems />
+          <RemoveItems :itemID="props.itemID" :currentQuantity="state.quantity" />
         </div>
 
         <div class="bottom-part">
@@ -93,6 +94,7 @@ main {
 .close-button {
   border: 0;
   margin: 0;
+  margin-top: auto;
   margin-bottom: auto;
   margin-left: auto;
 
@@ -120,6 +122,11 @@ main {
   font-size: 1.5rem;
 }
 
+.bottom-part {
+  overflow-y: scroll;
+  height: 15rem;
+}
+
 .bottom-part > .title {
   margin-bottom: 1rem;
 }
@@ -134,14 +141,19 @@ main {
   left: 0;
   right: 0;
   bottom: 0;
+  z-index: 1;
+  overflow: hidden;
+
+  display: flex;
+  justify-content: center;
+  align-items: center;
 }
 
 .window {
   background: #f5f9f6;
   padding: 1.5rem;
-  display: flex;
+  display: inline-flex;
 
-  margin: 8rem;
   border-radius: 2rem;
 }
 .item-icon {
@@ -173,6 +185,7 @@ h1 {
 
 .detailed-info {
   margin: 2rem 0;
+  margin-right: 2rem;
   font-size: 1.2rem;
   font-weight: 500;
 }
@@ -194,5 +207,52 @@ h1 {
   display: flex;
   width: 100%;
   margin: 1.5rem 0;
+}
+
+@media screen and (min-width: 350px) and (max-width: 600px) {
+  .top-part {
+    gap: 0.5rem;
+  }
+
+  .central-part {
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+    margin: 1.5rem 0;
+  }
+
+  .item-icon {
+    display: none;
+    /* margin: 0.75rem;
+    margin-bottom: auto;
+    width: 32px;
+    height: 32px; */
+  }
+
+  .window {
+    padding: 2rem;
+    width: 90%;
+    height: 95%;
+    overflow-y: scroll;
+  }
+
+  .close-button {
+    width: 2.25rem;
+    height: 2.25rem;
+  }
+
+  .close-button > img {
+    width: 1.75rem;
+    height: 1.75rem;
+  }
+
+  .quantity-container {
+    font-size: 0.9rem;
+    padding: 6px 12px;
+  }
+
+  .name-info > h1 {
+    font-size: 1.25rem;
+  }
 }
 </style>

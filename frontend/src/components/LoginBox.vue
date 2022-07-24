@@ -5,8 +5,15 @@ import router from "../router/index";
 
 import { useUserDataStore } from "@/stores/userData";
 
+import { useToast } from "primevue/usetoast";
+const toast = useToast();
+
 const state = reactive({ username: "", password: "" });
 const userData = useUserDataStore();
+
+const showError = (err: string) => {
+  toast.add({ severity: "error", summary: "Errore", detail: err, life: 3500 });
+};
 
 const onFormSubmit = async () => {
   const res = await fetch(`${import.meta.env.BACKEND_URI}/login`, {
@@ -25,6 +32,7 @@ const onFormSubmit = async () => {
 
     const userInfo = await client.query("getMyInfo");
     console.log(userInfo);
+
     if (userInfo) {
       userData.username = userInfo.username;
       userData.firstName = userInfo.firstname;
@@ -35,6 +43,7 @@ const onFormSubmit = async () => {
 
     router.push("/home");
   } else {
+    showError(data.message);
     console.log(data);
   }
 };
@@ -42,6 +51,7 @@ const onFormSubmit = async () => {
 
 <template>
   <div class="login-box">
+    <Toast />
     <h1 class="main-title">Login</h1>
 
     <form @submit.prevent="onFormSubmit">

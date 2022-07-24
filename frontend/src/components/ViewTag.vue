@@ -7,7 +7,7 @@ defineProps<{
 </script>
 
 <template>
-  <button @click="() => router.push('/search')" class="view-tag">{{ name }}</button>
+  <button @click="() => router.push(`/search?tags=${name}`)" class="view-tag">{{ name }}</button>
 </template>
 
 <style>

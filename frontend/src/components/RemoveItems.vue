@@ -1,11 +1,25 @@
 <script setup lang="ts">
+const props = defineProps<{
+  itemID: string;
+  currentQuantity: number;
+}>();
+
 import { reactive } from "vue";
 import addIcon from "@/assets/icons/add.svg";
 import minusIcon from "@/assets/icons/minus.svg";
+import client from "@/utils/trpc";
 
 const state = reactive({
   itemsToRemove: 0,
 });
+
+const updateQuantity = async () => {
+  await client.mutation("removeItems", {
+    itemID: props.itemID,
+    prevQuantity: props.currentQuantity,
+    itemsToRemove: state.itemsToRemove,
+  });
+};
 </script>
 
 <template>
@@ -30,7 +44,7 @@ const state = reactive({
     </div>
 
     <div class="button-container">
-      <Button label="Rimuovi" />
+      <Button label="Rimuovi" @click="updateQuantity" />
     </div>
   </div>
 </template>
@@ -53,6 +67,11 @@ const state = reactive({
   margin-left: auto;
 }
 
+.remove-items-container > .title {
+  text-align: center;
+  font-size: 1rem;
+}
+
 .count-btn {
   background: #e8e8e8;
   border: 0;
@@ -63,7 +82,7 @@ const state = reactive({
 }
 
 .count-btn:hover {
-  background: #dddddd
+  background: #dddddd;
 }
 
 .counter {
@@ -79,5 +98,26 @@ const state = reactive({
   display: flex;
   justify-content: center;
   margin-top: 1rem;
+}
+
+@media screen and (min-width: 400px) and (max-width: 1300px) {
+  .remove-items-container {
+    padding: 1.5rem;
+    border: 1px solid #d9d9d9;
+    border-radius: 1rem;
+    margin-left: 0;
+  }
+
+  .count-btn > img {
+    width: 2rem;
+  }
+
+  .counter {
+    font-size: 2rem;
+  }
+
+  .remove-items-container > .title {
+    font-size: 1.25rem;
+  }
 }
 </style>

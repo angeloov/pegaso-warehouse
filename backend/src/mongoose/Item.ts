@@ -7,10 +7,13 @@ interface ItemType {
   position: string;
   tags: string[];
   project_name: string;
+  wasAlreadyPrinted: boolean;
   history: object[];
   website?: string;
   part_number?: string;
 }
+
+
 
 const itemSchema = new Schema<ItemType>({
   _id: String,
@@ -19,6 +22,7 @@ const itemSchema = new Schema<ItemType>({
   position: String,
   tags: [String],
   project_name: String,
+  wasAlreadyPrinted: Boolean,
   history: [{}],
   website: String,
   part_number: String,
@@ -27,3 +31,4 @@ const itemSchema = new Schema<ItemType>({
 const itemModel = model<ItemType>("items", itemSchema);
 
 export default itemModel;
+export type { ItemType, JWTPayload };

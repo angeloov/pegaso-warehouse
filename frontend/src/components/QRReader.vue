@@ -1,25 +1,57 @@
 <script setup lang="ts">
 import addIcon from "@/assets/icons/add.svg";
-const emit = defineEmits(["closeQRReader"])
+import QrScanner from "qr-scanner";
+import { onMounted, ref } from "vue";
+
+const emit = defineEmits(["closeQRReader", "scannedQRCode"]);
 
 const props = defineProps<{
   isShown: boolean;
 }>();
 
+const videoRef = ref(null);
+let scanner;
+
+onMounted(() => {
+  if (props.isShown) {
+    scanner = new QrScanner(
+      videoRef.value,
+      function (result: any) {
+        if (result != "Scanner error: No QR code found") {
+          emit("scannedQRCode", result.data);
+          scanner.stop();
+        }
+      },
+      {
+        maxScansPerSecond: 5,
+        highlightScanRegion: true,
+        highlightCodeOutline: true,
+      }
+    );
+
+    scanner.start();
+  }
+});
+
+const closeQRReader = () => {
+  emit("closeQRReader");
+  scanner.destroy();
+};
 </script>
 
 <template>
   <div class="container" :class="{ shown: props.isShown }">
-    <button class="close-btn" @click="() => emit('closeQRReader')">
+    <button class="close-btn" @click="closeQRReader">
       <img :src="addIcon" alt="" class="close-btn-img" />
     </button>
-    <p>QRReader</p>
+    <video src="" ref="videoRef" class="camera"></video>
   </div>
 </template>
 
 <style scoped>
 .shown {
-  display: block !important;
+  display: flex !important;
+  place-items: center;
 }
 
 .container {
@@ -46,6 +78,7 @@ const props = defineProps<{
   height: 3.5rem;
   display: grid;
   place-items: center;
+  z-index: 1;
 }
 
 .close-btn-img {
@@ -53,5 +86,14 @@ const props = defineProps<{
   width: 3rem;
   height: 3rem;
   margin: auto;
+}
+.camera {
+  width: 100vw;
+  height: 100vh;
+}
+
+#output {
+  position: absolute;
+  top: 0;
 }
 </style>

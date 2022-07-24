@@ -1,30 +1,60 @@
 <script setup lang="ts">
 import Header from "@/components/Header.vue";
 import addComponentIcon from "@/assets/icons/add-item.svg";
+import scanIcon from "@/assets/icons/scan.svg";
 import ViewTag from "@/components/ViewTag.vue";
 import QRReader from "@/components/QRReader.vue";
+import PegasoID from "@/components/PegasoID.vue";
+import client from "@/utils/trpc";
+
 import { reactive } from "vue";
 
 const state = reactive({
   qrReaderIsShown: false,
+  itemInfoDialogIsShown: false,
+  itemID: null,
+  tags: [],
 });
 
 import router from "@/router";
 
 import { useUserDataStore } from "@/stores/userData";
+import ItemInfoDialog from "../components/ItemInfoDialog.vue";
 const userData = useUserDataStore();
 
 const getRandomEmoji = () => {
   const emojis = ["👋", "😀", "🥳", "🎉"];
   return emojis[Math.floor(Math.random() * emojis.length)];
 };
+
+const onScannedQRCode = itemID => {
+  state.qrReaderIsShown = false;
+  state.itemInfoDialogIsShown = true;
+  state.itemID = itemID;
+};
+
+const onCloseItemInfoWindow = () => {
+  state.itemInfoDialogIsShown = false;
+  state.itemID = null;
+};
+
+(async () => {
+  state.tags = await client.query("getAllTags");
+})();
 </script>
 
 <template>
   <div>
     <QRReader
       :isShown="state.qrReaderIsShown"
+      :key="state.qrReaderIsShown"
       @closeQRReader="() => (state.qrReaderIsShown = false)"
+      @scannedQRCode="onScannedQRCode"
+    />
+    <ItemInfoDialog
+      v-if="state.itemInfoDialogIsShown"
+      :itemID="state.itemID"
+      @closeItemInfoWindow="onCloseItemInfoWindow"
     />
     <Header />
 
@@ -38,18 +68,20 @@ const getRandomEmoji = () => {
         </Button>
 
         <Button @click="() => (state.qrReaderIsShown = true)" type="button" class="primary-btn">
-          <img alt="logo" :src="addComponentIcon" class="primary-btn-icon" />
+          <img alt="logo" :src="scanIcon" class="primary-btn-icon" />
           <span class="ml-3 font-bold text-xl">Scannerizza QRCode</span>
         </Button>
+      </div>
+
+      <div>
+        <PegasoID />
       </div>
 
       <div class="objects-container">
         <h2>Oggetti in magazzino</h2>
 
         <span>
-          <ViewTag name="PC" />
-          <ViewTag name="Transistor" />
-          <ViewTag name="Oscilloscopio" />
+          <ViewTag v-for="tag in state.tags" :name="tag" />
         </span>
       </div>
     </main>
@@ -80,7 +112,7 @@ main {
   display: flex;
   gap: 1rem;
   margin-top: 1rem;
-  margin-bottom: 4rem;
+  margin-bottom: 2rem;
 }
 
 .objects-container > span {

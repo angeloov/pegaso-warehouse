@@ -3,6 +3,8 @@ import itemIcon from "@/assets/icons/item.svg";
 import editIcon from "@/assets/icons/edit.svg";
 import EditItemDialog from "@/components/EditItemDialog.vue";
 import router from "@/router";
+import printIcon from "@/assets/icons/printer.svg";
+import client from "@/utils/trpc";
 
 import { useDialog } from "primevue/usedialog";
 const dialog = useDialog();
@@ -10,14 +12,27 @@ const dialog = useDialog();
 const props = defineProps<{
   itemName: string;
   id: string;
+  showOnlyPrintButton?: boolean;
 }>();
 
-const emit = defineEmits(["openWindow"]);
+const emit = defineEmits(["openItemInfoWindow", "openEditItemWindow"]);
 
-const openItemInfoWindow = () => {
-  emit("openWindow", props.id);
+const openEditItemWindow = () => {
+  emit("openEditItemWindow", props.id);
 };
 
+const openItemInfoWindow = () => {
+  emit("openItemInfoWindow", props.id);
+};
+
+const openPrintItemTab = async () => {
+  const linkToPDF = await client.query("generatePDF", {
+    itemIDs: [props.id],
+  });
+
+  console.log(linkToPDF);
+  window.open(linkToPDF, "_blank").focus();
+};
 </script>
 
 <template>
@@ -32,9 +47,16 @@ const openItemInfoWindow = () => {
     </span>
 
     <span class="right-container">
-      <button class="action-button" @click="openItemInfoWindow">Vedi dettagli</button>
-      <button class="edit-icon" @click="() => dialog.open(EditItemDialog, {})">
-        <img :src="editIcon" alt="" />
+      <button v-if="!showOnlyPrintButton" class="action-button" @click="openItemInfoWindow">
+        Vedi dettagli
+      </button>
+
+      <button class="edit-icon" @click="openPrintItemTab">
+        <img :src="printIcon" alt="Print icon" />
+      </button>
+
+      <button v-if="!showOnlyPrintButton" class="edit-icon" @click="openEditItemWindow">
+        <img :src="editIcon" alt="Edit icon" />
       </button>
     </span>
   </div>
@@ -63,6 +85,7 @@ const openItemInfoWindow = () => {
 .right-container {
   display: flex;
   place-items: center;
+  gap: 0.25rem;
 }
 
 .action-button {
@@ -91,5 +114,11 @@ const openItemInfoWindow = () => {
 
 .item-desc {
   color: #4a4a4a;
+}
+.edit-icon {
+  padding: 0.5rem;
+  border: 0;
+  border-radius: 2rem;
+  cursor: pointer;
 }
 </style>

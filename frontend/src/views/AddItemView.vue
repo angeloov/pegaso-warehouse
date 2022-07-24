@@ -4,6 +4,9 @@ import { reactive } from "vue";
 import client from "@/utils/trpc";
 import { useUserDataStore } from "@/stores/userData";
 
+import { useToast } from "primevue/usetoast";
+const toast = useToast();
+
 const userData = useUserDataStore();
 console.log(userData.firstName);
 
@@ -17,20 +20,37 @@ const state = reactive({
   partNumber: "",
 });
 
-const onFormSubmit = () => {
-  client.mutation("createItem", {
-    name: state.name,
-    quantity: state.quantity,
-    position: state.position,
-    tags: state.tags,
-    projectName: state.projectName,
-  });
+const onFormSubmit = async () => {
+  try {
+    const res = await client.mutation("createItem", {
+      name: state.name,
+      quantity: state.quantity,
+      position: state.position,
+      tags: state.tags,
+      projectName: state.projectName,
+    });
+
+    toast.add({
+      severity: "success",
+      summary: "Successo",
+      detail: `Oggetto "${state.name}" aggiunto`,
+      life: 3000,
+    });
+  } catch (err) {
+    toast.add({
+      severity: "error",
+      summary: "Errore",
+      detail: err.message,
+      life: 3000,
+    });
+  }
 };
 </script>
 
 <template>
   <div>
-    <Header />
+    <Header position="top-left" group="tl" />
+    <Toast />
 
     <main>
       <h1 class="welcome-title">Aggiungi oggetto</h1>
@@ -60,7 +80,7 @@ const onFormSubmit = () => {
         </div>
 
         <div class="field">
-          <label for="posizione">Posizione</label>
+          <label for="posizione">Posizione (opzionale)</label>
           <InputText
             id="posizione"
             v-model="state.position"
@@ -70,7 +90,7 @@ const onFormSubmit = () => {
         </div>
 
         <div class="field">
-          <label for="name">Tags</label>
+          <label for="name">Tags (separati da virgole) (opzionale) </label>
           <Chips v-model="state.tags" separator="," />
         </div>
 

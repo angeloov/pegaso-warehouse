@@ -6,11 +6,13 @@ import mongoose from "mongoose";
 import jwt from "jsonwebtoken";
 import * as utils from "./jwt/utils";
 import cors from "cors";
+import fs from "fs";
+
+import https from "https";
 
 import type { UserType } from "./mongoose/User";
 import { TRPCError } from "@trpc/server";
 
-// TODO: Fix this
 import path from "path";
 require("dotenv").config({ path: path.resolve(__dirname, "../.env") });
 
@@ -19,10 +21,12 @@ mongoose.connect(process.env.MONGODB_URI as string);
 const app = express();
 app.use(
   cors({
-    origin: `http://${process.env.FRONTEND_URI}:3000`,
+    origin: `https://${process.env.FRONTEND_URI}:3000`,
     credentials: true,
   })
 );
+
+app.use("/pdf", express.static(path.resolve(__dirname, "..", "src", "pdf", "static")));
 
 // tRPC config
 import appRouter from "./tRPC";
@@ -97,7 +101,11 @@ app.post("/protected", passport.authenticate("jwt", { session: false }), async (
 });
 
 app.post("/register", async (req, res) => {
-  const userDoc = new User({ username: "angelo", password: "ciao", firstname: "Angelo" });
+  const userDoc = new User({
+    username: req.body.username,
+    password: req.body.password,
+    firstname: req.body.firstname,
+  });
   await userDoc.save();
 
   res.end();
@@ -109,6 +117,19 @@ app.use((err: any, req: any, res: any, next: any) => {
 });
 
 app.listen(4000, () => console.log("Listening on port 4000"));
+// console.log(path.resolve(__dirname, "..", "src", "private_key.pem"));
+
+// https
+//   .createServer(
+//     {
+//       key: fs.readFileSync(path.resolve(__dirname, "..", '90.0.0.19-key.pem')),
+//       cert: fs.readFileSync(path.resolve(__dirname, "..", '90.0.0.19.pem')),
+//     },
+//     app
+//   )
+//   .listen(4000, () => {
+//     console.log(`Listening on port 4000. https://${process.env.BACKEND_URI}:4000`);
+//   });
 
 // export type definition of API
 export type AppRouter = typeof appRouter;
