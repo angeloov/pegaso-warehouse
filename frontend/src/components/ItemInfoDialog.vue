@@ -22,6 +22,10 @@ const state = reactive({
   tags: [],
 });
 
+const onUpdateQuantity = (newQuantity) => {
+  state.quantity = newQuantity;
+}
+
 const emit = defineEmits(["closeItemInfoWindow"]);
 const closeItemInfoWindow = () => emit("closeItemInfoWindow");
 
@@ -66,7 +70,7 @@ onMounted(async () => {
             <p>Tags: {{ state.tags.join(", ") }}</p>
           </div>
 
-          <RemoveItems :itemID="props.itemID" :currentQuantity="state.quantity" />
+          <RemoveItems :itemID="props.itemID" :currentQuantity="state.quantity" @updateQuantity="onUpdateQuantity"/>
         </div>
 
         <div class="bottom-part">

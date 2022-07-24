@@ -13,12 +13,16 @@ const state = reactive({
   itemsToRemove: 0,
 });
 
+const emit = defineEmits(["updateQuantity"])
+
 const updateQuantity = async () => {
   await client.mutation("removeItems", {
     itemID: props.itemID,
     prevQuantity: props.currentQuantity,
     itemsToRemove: state.itemsToRemove,
   });
+
+  emit("updateQuantity", props.currentQuantity - state.itemsToRemove);
 };
 </script>
 

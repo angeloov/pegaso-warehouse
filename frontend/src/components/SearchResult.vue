@@ -9,6 +9,10 @@ import client from "@/utils/trpc";
 import { useDialog } from "primevue/usedialog";
 const dialog = useDialog();
 
+import { useToast } from "primevue/usetoast";
+const toast = useToast();
+
+
 const props = defineProps<{
   itemName: string;
   id: string;
@@ -26,6 +30,13 @@ const openItemInfoWindow = () => {
 };
 
 const openPrintItemTab = async () => {
+  toast.add({
+    severity: "info",
+    summary: "Info",
+    detail: "Generando il PDF...",
+    life: 3000,
+  });
+
   const linkToPDF = await client.query("generatePDF", {
     itemIDs: [props.id],
   });

@@ -32,7 +32,7 @@ const newItemInfo = reactive({
 });
 
 // Fetch data to modify
-(async () => {
+const populateState = async () => {
   const res = await client.query("getItemInfoByID", {
     itemID: props.id,
   });
@@ -50,7 +50,9 @@ const newItemInfo = reactive({
   newItemInfo.position = res.position;
   newItemInfo.tags = res.tags;
   newItemInfo.projectName = res.project_name;
-})();
+};
+
+populateState();
 
 const showSuccess = () => {
   toast.add({
@@ -85,6 +87,7 @@ const onFormSubmit = async () => {
       },
     });
 
+    populateState();
     showSuccess();
   } catch (err: Error) {
     showError(err.message);

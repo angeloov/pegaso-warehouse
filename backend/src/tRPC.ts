@@ -104,7 +104,7 @@ const appRouter = trpc
     async resolve({ input }) {
       // Resolve usernames in history
       const query = await itemModel.findById(input.itemID);
-      
+
       if (!query) throw new TRPCError("The itemID that was provided can't be found");
 
       for (let obj of query.history) {
@@ -216,7 +216,7 @@ const appRouter = trpc
       const pdf = await generate({ template: pdfTemplate, inputs });
       fs.writeFileSync(path.resolve(__dirname, "..", "src", "pdf", "static", `${hash}.pdf`), pdf);
 
-      return `http://${process.env.BACKEND_URI}:4000/pdf/${hash}.pdf`;
+      return `${process.env.BACKEND_URI}/pdf/${hash}.pdf`;
     },
   })
   .query("getNextPegID", {

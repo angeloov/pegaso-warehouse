@@ -125,7 +125,7 @@ main {
   margin-bottom: 1rem;
 }
 
-@media screen and (max-width: 500px) {
+@media screen and (min-width: 350px) and (max-width: 600px) {
   .button-container {
     flex-direction: column;
   }

@@ -16,7 +16,7 @@ const showError = (err: string) => {
 };
 
 const onFormSubmit = async () => {
-  const res = await fetch(`${import.meta.env.BACKEND_URI}/login`, {
+  const res = await fetch(`${import.meta.env.VITE_BACKEND_URI}/login`, {
     method: "POST",
     credentials: "include",
     headers: {
