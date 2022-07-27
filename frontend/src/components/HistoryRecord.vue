@@ -7,6 +7,18 @@ const props = defineProps<{
   };
 }>();
 
+const keysInItalian = new Map(
+  Object.entries({
+    name: "Nome",
+    quantity: "Quantità",
+    position: "Posizione",
+    tags: "Tags",
+    project_name: "Nome progetto",
+    website: "Sito web",
+    part_number: "Part number",
+  })
+);
+
 console.log(props.snapshot);
 </script>
 
@@ -21,7 +33,7 @@ console.log(props.snapshot);
       <p v-if="!props.snapshot.edits">Ha creato il componente</p>
       <span v-else class="edits-container">
         <p v-for="edit in props.snapshot.edits" :v-key="edit.key">
-          {{ edit.key }} => <span style="text-decoration: line-through">{{ edit.from }}</span>
+          {{ keysInItalian.get(edit.key) }}: <span style="text-decoration: line-through">{{ edit.from }}</span>
           {{ edit.to }}
         </p>
       </span>
