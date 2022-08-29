@@ -19,5 +19,5 @@ BACKEND_URI=http://localhost:4000 # change this if not running on localhost
 ```
 
 Then create a MongoDB database named `pegaso-warehouse`.
-To build the frontend do `npm run build`. The dist folder will then contain the build html, css, js files.
+To build the frontend do `npm run build`. The dist folder will then contain the built html, css, js files.
 To start the backend first do `cd backend` and then `npm run build`, `npm start`. 
