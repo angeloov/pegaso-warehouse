@@ -6,7 +6,7 @@ do
 	--data-raw '{
 			"0": {
 					"name": "Test performance",
-					"quantity": 1,
+					"quantity": 1
 					"position": "TUV",
 					"tags": [
 							"pc"

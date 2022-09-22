@@ -83,6 +83,7 @@ const openPrintItemTab = async () => {
   box-shadow: 0 0 0 0.75px #c0c0c0;
   padding: 1.25rem 1.5rem;
   border-radius: 1.25rem;
+  margin-bottom: .5rem;
 }
 
 .left-container {
