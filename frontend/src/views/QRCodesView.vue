@@ -42,7 +42,7 @@ const printMultipleQRCodes = async () => {
 };
 </script>
 
-<template>
+<template
   <div>
     <Header />
     <Toast />
